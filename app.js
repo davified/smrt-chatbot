@@ -1,12 +1,3 @@
-/*
- * Copyright 2016-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
 /* jshint node: true, devel: true */
 
 const
@@ -18,18 +9,11 @@ const
   request = require('request');
 
 var app = express();
-require('dotenv').config();
 
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
-
-/*
- * Be sure to setup your config values before running this code. You can
- * set them using environment variables or modifying the config file in /config.
- *
- */
 
 // App Secret can be retrieved from the App Dashboard
 const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ?
@@ -57,11 +41,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
   process.exit(1);
 }
 
-/*
- * Use your own validation token. Check that the token used in the Webhook
- * setup is the same token used here.
- *
- */
+// setting up webhook
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
       req.query['hub.verify_token'] === VALIDATION_TOKEN) {
@@ -73,14 +53,7 @@ app.get('/webhook', function(req, res) {
   }
 });
 
-
-/*
- * All callbacks for Messenger are POST-ed. They will be sent to the same
- * webhook. Be sure to subscribe your app to your page to receive callbacks
- * for your page.
- * https://developers.facebook.com/docs/messenger-platform/product-overview/setup#subscribe_app
- *
- */
+/* All callbacks for Messenger are POST-ed. */
 app.post('/webhook', function (req, res) {
   var data = req.body;
 
@@ -256,6 +229,10 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'mrt status':
+        sendMRTStatus(senderID);
+        break;
+
       case 'image':
         sendImageMessage(senderID);
         break;
@@ -264,28 +241,12 @@ function receivedMessage(event) {
         sendGifMessage(senderID);
         break;
 
-      case 'audio':
-        sendAudioMessage(senderID);
-        break;
-
-      case 'video':
-        sendVideoMessage(senderID);
-        break;
-
-      case 'file':
-        sendFileMessage(senderID);
-        break;
-
       case 'button':
         sendButtonMessage(senderID);
         break;
 
       case 'generic':
         sendGenericMessage(senderID);
-        break;
-
-      case 'receipt':
-        sendReceiptMessage(senderID);
         break;
 
       case 'quick reply':
@@ -405,6 +366,21 @@ function receivedAccountLink(event) {
     "and auth code %s ", senderID, status, authCode);
 }
 
+// Send MRT status
+function sendMRTStatus(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'MRT iz all okeh',
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
 /*
  * Send an image using the Send API.
  *
@@ -440,73 +416,8 @@ function sendGifMessage(recipientId) {
       attachment: {
         type: "image",
         payload: {
+          // replace with giphy API url
           url: SERVER_URL + "/assets/instagram_logo.gif"
-        }
-      }
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-/*
- * Send audio using the Send API.
- *
- */
-function sendAudioMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "audio",
-        payload: {
-          url: SERVER_URL + "/assets/sample.mp3"
-        }
-      }
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-/*
- * Send a video using the Send API.
- *
- */
-function sendVideoMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "video",
-        payload: {
-          url: SERVER_URL + "/assets/allofus480.mov"
-        }
-      }
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-/*
- * Send a file using the Send API.
- *
- */
-function sendFileMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "file",
-        payload: {
-          url: SERVER_URL + "/assets/test.txt"
         }
       }
     }
@@ -620,71 +531,6 @@ function sendGenericMessage(recipientId) {
   callSendAPI(messageData);
 }
 
-/*
- * Send a receipt message using the Send API.
- *
- */
-function sendReceiptMessage(recipientId) {
-  // Generate a random receipt ID as the API requires a unique ID
-  var receiptId = "order" + Math.floor(Math.random()*1000);
-
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message:{
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "receipt",
-          recipient_name: "Peter Chang",
-          order_number: receiptId,
-          currency: "USD",
-          payment_method: "Visa 1234",
-          timestamp: "1428444852",
-          elements: [{
-            title: "Oculus Rift",
-            subtitle: "Includes: headset, sensor, remote",
-            quantity: 1,
-            price: 599.00,
-            currency: "USD",
-            image_url: SERVER_URL + "/assets/riftsq.png"
-          }, {
-            title: "Samsung Gear VR",
-            subtitle: "Frost White",
-            quantity: 1,
-            price: 99.99,
-            currency: "USD",
-            image_url: SERVER_URL + "/assets/gearvrsq.png"
-          }],
-          address: {
-            street_1: "1 Hacker Way",
-            street_2: "",
-            city: "Menlo Park",
-            postal_code: "94025",
-            state: "CA",
-            country: "US"
-          },
-          summary: {
-            subtotal: 698.99,
-            shipping_cost: 20.00,
-            total_tax: 57.67,
-            total_cost: 626.66
-          },
-          adjustments: [{
-            name: "New Customer Discount",
-            amount: -50
-          }, {
-            name: "$100 Off Coupon",
-            amount: -100
-          }]
-        }
-      }
-    }
-  };
-
-  callSendAPI(messageData);
-}
 
 /*
  * Send a message with Quick Reply buttons.
@@ -829,8 +675,6 @@ function callSendAPI(messageData) {
 }
 
 // Start server
-// Webhooks must be available via SSL with a certificate signed by a valid
-// certificate authority.
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
