@@ -1,6 +1,6 @@
 {
-    "appSecret": "",
-    "pageAccessToken": "",
-    "validationToken": "",
-    "serverURL": ""
+    "appSecret": "df17b7a2472dfb4ac8165b014fb850b7",
+    "pageAccessToken": "EAAVsqGTwWoABABEekZAkIostXYOe0G3aff0GnfQ2wngCdOZCQf5QR0fTl5TRDfB3ZB5SRxc0e7x0g74aFA202ZCBI2c91t5j7UjKqy213lB5nDcWhwBw6PzeenHZC15vkHVE73jYpMY0nxeB4up9Xo4VwRNHe4LtLmTMEZClw7PQZDZD",
+    "validationToken": "tacocat",
+    "serverURL": "https://smrt-secret-cat.herokuapp.com/"
 }
