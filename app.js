@@ -221,7 +221,7 @@ var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i');
 var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup']
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i');
 var mrtStatusArray = ['mrt', 'status', 'any breakdown']
-var mrtStatusRegex = new RegExp(greetingsArray.join('|'), 'i');
+var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i');
 
 function categorizeMessage(message) {
   if (swearWordsRegex.test(message)) { // Contains the accepted word
@@ -292,6 +292,10 @@ function receivedMessage(event) {
         sendGreetingsResponse(senderID);
         break;
 
+      case 'not sure':
+        sendQuickReply(senderID);
+        break;
+
       case 'mrt status check':
         sendMRTStatus(senderID);
         break;
@@ -304,60 +308,15 @@ function receivedMessage(event) {
         sendGifMessage(senderID);
         break;
 
-      case 'button':
-        sendButtonMessage(senderID);
+      case 'image':
+        sendImageMessage(senderID);
         break;
 
       default:
         sendTextMessage(senderID, messageText);
       }
-
-    // switch (messageText) {
-    //   case 'mrt status':
-    //     sendMRTStatus(senderID);
-    //     break;
-    //
-    //   case 'image':
-    //     sendImageMessage(senderID);
-    //     break;
-    //
-    //   case 'gif':
-    //     sendGifMessage(senderID);
-    //     break;
-    //
-    //   case 'button':
-    //     sendButtonMessage(senderID);
-    //     break;
-    //
-    //   case 'generic':
-    //     sendGenericMessage(senderID);
-    //     break;
-    //
-    //   case 'quick reply':
-    //     sendQuickReply(senderID);
-    //     break;
-    //
-    //   case 'read receipt':
-    //     sendReadReceipt(senderID);
-    //     break;
-    //
-    //   case 'typing on':
-    //     sendTypingOn(senderID);
-    //     break;
-    //
-    //   case 'typing off':
-    //     sendTypingOff(senderID);
-    //     break;
-    //
-    //   case 'account linking':
-    //     sendAccountLinking(senderID);
-    //     break;
-    //
-    //   default:
-    //     sendTextMessage(senderID, messageText);
-    // }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
+    sendTextMessage(senderID, "Wow. Tt iz kind of human to send chief cat big files");
   }
 }
 
