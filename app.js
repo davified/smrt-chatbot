@@ -284,7 +284,8 @@ function receivedMessage(event) {
     messageCategory = categorizeMessage(messageText)
     switch (messageCategory) {
       case 'swear word':
-        sendSwearWordResponse(senderID);
+        // sendSwearWordResponse(senderID);
+        sendQuickReply(senderID);
         break;
 
       case 'greetings':
