@@ -228,7 +228,7 @@ function categorizeMessage(message) {
     return 'swear word'
   } else if (greetingsRegex.test(message)) {
     return 'greetings'
-  } else if (message.contains('?')) {
+  } else if (message.indexOf('?') !== -1) {
     return 'question'
   } else if (mrtStatusRegex.test(message)){
     return 'mrt status check'
