@@ -218,7 +218,7 @@ stream.on('tweet', function (tweet) {
 
 var swearWordsArray = ['knn','cheebye','chee bye','fuck','fk','kan ni na','pussy']
 var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i');
-var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup', ' ', '.', '...']
+var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup']
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i');
 var mrtStatusArray = ['mrt', 'status', 'any breakdown']
 var mrtStatusRegex = new RegExp(greetingsArray.join('|'), 'i');
@@ -657,10 +657,7 @@ function sendGenericMessage(recipientId) {
 }
 
 
-/*
- * Send a message with Quick Reply buttons.
- *
- */
+/* Send a message with Quick Reply buttons. */
 function sendQuickReply(recipientId) {
   var messageData = {
     recipient: {
