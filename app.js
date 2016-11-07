@@ -547,7 +547,7 @@ function sendButtonMessage(recipientId) {
         type: "template",
         payload: {
           template_type: "button",
-          text: "wat does chief human wantz to noe?",
+          text: "wat does chief human wantz to noe? Choose 1 opshun:",
           buttons:[{
             type: "postback",
             title: "Iz MRT brokez right now?",
@@ -580,12 +580,12 @@ function sendQuickReply(recipientId) {
       quick_replies: [
         {
           "content_type":"postback",
-          "title":"Iz MRT brokez right now?",
+          "title":"Iz MRT brokez now?",
           "payload":"mrt_status_check_payload"
         },
         {
           "content_type":"postback",
-          "title":"Show me yur peepurs!!",
+          "title":"Show me yur peepurs!",
           "payload":"show_image_payload"
         },
         {
