@@ -307,18 +307,6 @@ function receivedMessage(event) {
         sendButtonMessage(senderID);
         break;
 
-      case 'quick reply':
-        sendQuickReply(senderID);
-        break;
-
-      case 'typing on':
-        sendTypingOn(senderID);
-        break;
-
-      case 'typing off':
-        sendTypingOff(senderID);
-        break;
-
       default:
         sendTextMessage(senderID, messageText);
       }
@@ -531,7 +519,7 @@ function sendImageMessage(recipientId) {
       attachment: {
         type: "image",
         payload: {
-          url: SERVER_URL + "/assets/rift.png"
+          url: "http://thecatapi.com/api/images/get"
         }
       }
     }
@@ -554,7 +542,7 @@ function sendGifMessage(recipientId) {
         type: "image",
         payload: {
           // replace with giphy API url
-          url: SERVER_URL + "/assets/instagram_logo.gif"
+          url: "http://thecatapi.com/api/images/get?format=src&type=gif"
         }
       }
     }
@@ -679,22 +667,22 @@ function sendQuickReply(recipientId) {
       id: recipientId
     },
     message: {
-      text: "What's your favorite movie genre?",
+      text: "wat does chief human wantz to noe?",
       quick_replies: [
         {
           "content_type":"text",
-          "title":"Action",
+          "title":"Iz MRT brokez right now?",
           "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
         },
         {
           "content_type":"text",
-          "title":"Comedy",
+          "title":"Show me yur peepurs!!",
           "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
         },
         {
           "content_type":"text",
-          "title":"Drama",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"
+          "title":"Muv me with ur gifs",
+          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
         }
       ]
     }
@@ -715,40 +703,6 @@ function sendReadReceipt(recipientId) {
       id: recipientId
     },
     sender_action: "mark_seen"
-  };
-
-  callSendAPI(messageData);
-}
-
-/*
- * Turn typing indicator on
- *
- */
-function sendTypingOn(recipientId) {
-  console.log("Turning typing indicator on");
-
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    sender_action: "typing_on"
-  };
-
-  callSendAPI(messageData);
-}
-
-/*
- * Turn typing indicator off
- *
- */
-function sendTypingOff(recipientId) {
-  console.log("Turning typing indicator off");
-
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    sender_action: "typing_off"
   };
 
   callSendAPI(messageData);
