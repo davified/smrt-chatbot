@@ -20,6 +20,9 @@ const twitter = new Twit({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 })
 
+function generateRandomInteger(min,max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
 
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
@@ -283,17 +286,17 @@ function receivedMessage(event) {
     // the text we received.
     messageCategory = categorizeMessage(messageText)
     switch (messageCategory) {
-      case 'swear word':
-        // sendSwearWordResponse(senderID);
+      case 'greetings':
+        sendGreetingsResponse(senderID);
         sendButtonMessage(senderID)
         break;
 
-      case 'greetings':
-        sendGreetingsResponse(senderID);
+      case 'swear word':
+        sendSwearWordResponse(senderID);
         break;
 
       case 'not sure':
-        sendQuickReply(senderID);
+        sendButtonMessage(senderID)
         break;
 
       case 'mrt status check':
@@ -302,21 +305,14 @@ function receivedMessage(event) {
 
       case 'question':
         sendQuestionResponse(senderID);
+        sendButtonMessage(senderID)
         break
 
-      case 'gif':
-        sendGifMessage(senderID);
-        break;
-
-      case 'image':
-        sendImageMessage(senderID);
-        break;
-
       default:
-        sendTextMessage(senderID, messageText);
+        sendButtonMessage(senderID)
       }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Wow. Tt iz kind of human to send chief cat big files");
+    sendTextMessage(senderID, "Wow. Tt iz kind of human to send chief cat beeg files");
   }
 }
 
@@ -429,12 +425,14 @@ function sendMRTStatus(recipientId) {
 }
 
 function sendSwearWordResponse(recipientId) {
+  swearWordsResponseArray = ['Y is u so naughty?', 'earfling cat shud not b so rude', 'U is rude 2 da wrong cat. I is not ur boss cat']
+
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: 'Y is u so naughty?',
+      text: swearWordsResponseArray[generateRandomInteger(0,swearWordsResponseArray.length)],
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
@@ -443,12 +441,14 @@ function sendSwearWordResponse(recipientId) {
 }
 
 function sendGreetingsResponse(recipientId) {
+  greetingsArray = ['oh hai', 'hi human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
+  generateRandomInteger(0,5)
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: 'Oh hai again',
+      text: greetingsArray[generateRandomInteger(0,greetingsArray.length)],
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
