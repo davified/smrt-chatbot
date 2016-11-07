@@ -11,6 +11,7 @@ const
 
 require('dotenv').config()
 var app = express();
+var anyTrainBreakdown = false
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -185,7 +186,7 @@ function receivedAuthentication(event) {
   sendTextMessage(senderID, "Authentication successful");
 }
 
-var anyTrainBreakdown = false
+
 
 function checkIfBreakdown(tweetText) {
   tweetText = tweetText.toLowerCase()
@@ -213,24 +214,35 @@ var stream = twitter.stream('statuses/filter', {
 stream.on('tweet', function (tweet) {
   checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet.text)
-  // console.log(tweet.text.toLowerCase());
-  // socket.emit('tweet', tweet)
 })
+
+var swearWordsArray = ['knn','cheebye','chee bye','fuck','fk','kan ni na','pussy']
+var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i');
+var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup', ' ', '.', '...']
+var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i');
+var mrtStatusArray = ['mrt', 'status', 'any breakdown']
+var mrtStatusRegex = new RegExp(greetingsArray.join('|'), 'i');
+
+function categorizeMessage(message) {
+  if (swearWordsRegex.test(message)) { // Contains the accepted word
+    return 'swear word'
+  } else if (greetingsRegex.test(message)) {
+    return 'greetings'
+  } else if (message.contains('?')) {
+    return 'question'
+  } else if (mrtStatusRegex.test(message)){
+    return 'mrt status check'
+  } else {
+    return 'not sure'
+  }
+}
 
 /*
  * Message Event
  *
  * This event is called when a message is sent to your page. The 'message'
  * object format can vary depending on the kind of message that was received.
- * Read more at https://developers.facebook.com/docs/messenger-platform/webhook-reference/message-received
- *
- * For this example, we're going to echo any text that we get. If we get some
- * special keywords ('button', 'generic', 'receipt'), then we'll send back
- * examples of those bubbles to illustrate the special message bubbles we've
- * created. If we receive a message with an attachment (image, video, audio),
- * then we'll simply confirm that we've received the attachment.
- *
- */
+*/
 function receivedMessage(event) {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -266,18 +278,26 @@ function receivedMessage(event) {
   }
 
   if (messageText) {
-
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
-    switch (messageText) {
-      case 'mrt status':
+    messageCategory = categorizeMessage(messageText)
+    switch (messageCategory) {
+      case 'swear word':
+        sendSwearWordResponse(senderID);
+        break;
+
+      case 'greetings':
+        sendGreetingsResponse(senderID);
+        break;
+
+      case 'mrt status check':
         sendMRTStatus(senderID);
         break;
 
-      case 'image':
-        sendImageMessage(senderID);
-        break;
+      case 'question':
+        sendQuestionResponse(senderID);
+        break
 
       case 'gif':
         sendGifMessage(senderID);
@@ -287,16 +307,8 @@ function receivedMessage(event) {
         sendButtonMessage(senderID);
         break;
 
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
-
       case 'quick reply':
         sendQuickReply(senderID);
-        break;
-
-      case 'read receipt':
-        sendReadReceipt(senderID);
         break;
 
       case 'typing on':
@@ -307,13 +319,54 @@ function receivedMessage(event) {
         sendTypingOff(senderID);
         break;
 
-      case 'account linking':
-        sendAccountLinking(senderID);
-        break;
-
       default:
         sendTextMessage(senderID, messageText);
-    }
+      }
+
+    // switch (messageText) {
+    //   case 'mrt status':
+    //     sendMRTStatus(senderID);
+    //     break;
+    //
+    //   case 'image':
+    //     sendImageMessage(senderID);
+    //     break;
+    //
+    //   case 'gif':
+    //     sendGifMessage(senderID);
+    //     break;
+    //
+    //   case 'button':
+    //     sendButtonMessage(senderID);
+    //     break;
+    //
+    //   case 'generic':
+    //     sendGenericMessage(senderID);
+    //     break;
+    //
+    //   case 'quick reply':
+    //     sendQuickReply(senderID);
+    //     break;
+    //
+    //   case 'read receipt':
+    //     sendReadReceipt(senderID);
+    //     break;
+    //
+    //   case 'typing on':
+    //     sendTypingOn(senderID);
+    //     break;
+    //
+    //   case 'typing off':
+    //     sendTypingOff(senderID);
+    //     break;
+    //
+    //   case 'account linking':
+    //     sendAccountLinking(senderID);
+    //     break;
+    //
+    //   default:
+    //     sendTextMessage(senderID, messageText);
+    // }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
@@ -422,6 +475,48 @@ function sendMRTStatus(recipientId) {
 
   callSendAPI(messageData);
 }
+
+function sendSwearWordResponse(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'Y is u so naughty?',
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+function sendGreetingsResponse(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'Oh hai again',
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+  callSendAPI(messageData);
+}
+
+function sendQuestionResponse(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'me me no undrstnd yo questshion',
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+  callSendAPI(messageData);
+}
+
+
 
 /*
  * Send an image using the Send API.
