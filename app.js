@@ -7,8 +7,18 @@ const
   express = require('express'),
   https = require('https'),
   request = require('request');
+  Twit = require('twit')
 
+require('dotenv').config()
 var app = express();
+
+const twitter = new Twit({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token: process.env.TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+})
+
 
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
@@ -174,6 +184,38 @@ function receivedAuthentication(event) {
   // to let them know it was successful.
   sendTextMessage(senderID, "Authentication successful");
 }
+
+var anyTrainBreakdown = false
+
+function checkIfBreakdown(tweetText) {
+  tweetText = tweetText.toLowerCase()
+  if (tweetText.match('mrt breakdown|mrt disruption|delay|delayed|delays|disruption|train fault|no train service')) {
+    anyTrainBreakdown = true
+    console.log(`${anyTrainBreakdown}: ${tweetText}`);
+  }
+}
+
+function checkIfServiceResumed(tweetText) {
+  tweetText = tweetText.toLowerCase()
+  if (tweetText.match('back to normal|normal|resume|resumed')) {
+    anyTrainBreakdown = false
+    console.log(`${anyTrainBreakdown}: ${tweetText}`);
+  }
+}
+
+// TWITTER STREAM
+// setting up a twitter stream to listen for tweets which may suggest that there is an MRT breakdown
+var stream = twitter.stream('statuses/filter', {
+  track: 'mrt breakdown,mrt disruption,mrt,lrt,nel,northeast line,north east line,ccl,circle line,ewl,east west line,east-west line,eastwest line,nsl,north south line,north-south line,dtl,downtown line'
+  // locations: '1.267016, 103.618248, 1.467459, 104.026802'
+})
+
+stream.on('tweet', function (tweet) {
+  checkIfBreakdown(tweet.text)
+  checkIfServiceResumed(tweet.text)
+  // console.log(tweet.text.toLowerCase());
+  // socket.emit('tweet', tweet)
+})
 
 /*
  * Message Event
