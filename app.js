@@ -288,6 +288,7 @@ function receivedMessage(event) {
         break;
 
       case 'greetings':
+        sendQuickReply(senderID);
         sendGreetingsResponse(senderID);
         break;
 
