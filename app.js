@@ -367,11 +367,11 @@ function receivedPostback(event) {
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
   if (payload === 'mrt_status_check_payload') {
-    sendMRTStatus(recipientId)
+    sendMRTStatus(recipientID)
   } else if (payload === 'show_gif_payload') {
-    sendGifMessage(recipientId)
+    sendGifMessage(recipientID)
   } else if (payload === 'show_image_payload') {
-    sendImageMessage(recipientId)
+    sendImageMessage(recipientID)
   }
 }
 
