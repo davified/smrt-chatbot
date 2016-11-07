@@ -366,9 +366,13 @@ function receivedPostback(event) {
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
-  // When a postback is called, we'll send a message back to the sender to
-  // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
+  if (payload === 'mrt_status_check_payload') {
+    sendMRTStatus(recipientId)
+  } else if (payload === 'show_gif_payload') {
+    sendGifMessage(recipientId)
+  } else if (payload === 'show_image_payload') {
+    sendImageMessage(recipientId)
+  }
 }
 
 /*
