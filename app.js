@@ -411,12 +411,20 @@ function receivedAccountLink(event) {
 
 // Send MRT status
 function sendMRTStatus(recipientId) {
+  noBreakdownMessages = ['mrt iz ok. trainz r muving juz fine', 'evryting iz ok. big cat nid not shit in big cat pants', 'no train faultz today. humanz can go 2 wrk']
+  breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz nao spoilz.', 'no train 2day for human']
+  if (anyTrainBreakdown === true) {
+    mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
+  } else if (anyTrainBreakdown === false) {
+    mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+  }
+
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: 'MRT iz all okeh',
+      text: mrtStatusMessage,
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
