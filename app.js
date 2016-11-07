@@ -228,10 +228,10 @@ function categorizeMessage(message) {
     return 'swear word'
   } else if (greetingsRegex.test(message)) {
     return 'greetings'
-  } else if (message.indexOf('?') !== -1) {
-    return 'question'
   } else if (mrtStatusRegex.test(message)){
     return 'mrt status check'
+  } else if (message.slice(-1) === '?') {
+    return 'question'
   } else {
     return 'not sure'
   }
@@ -285,11 +285,10 @@ function receivedMessage(event) {
     switch (messageCategory) {
       case 'swear word':
         // sendSwearWordResponse(senderID);
-        sendQuickReply(senderID);
+        sendButtonMessage(senderID)
         break;
 
       case 'greetings':
-        sendQuickReply(senderID);
         sendGreetingsResponse(senderID);
         break;
 
@@ -544,19 +543,19 @@ function sendButtonMessage(recipientId) {
         type: "template",
         payload: {
           template_type: "button",
-          text: "This is test text",
+          text: "wat does chief human wantz to noe?",
           buttons:[{
-            type: "web_url",
-            url: "https://www.oculus.com/en-us/rift/",
-            title: "Open Web URL"
+            type: "postback",
+            title: "Iz MRT brokez right now?",
+            payload: "mrt_status_check_payload"
           }, {
             type: "postback",
-            title: "Trigger Postback",
-            payload: "DEVELOPER_DEFINED_PAYLOAD"
+            title: "Show me yur peepurs!!",
+            payload: "show_image_payload"
           }, {
-            type: "phone_number",
-            title: "Call Phone Number",
-            payload: "+16505551234"
+            type: "postback",
+            title: "Muv me with ur gifs",
+            payload: "show_gif_payload"
           }]
         }
       }
@@ -565,58 +564,6 @@ function sendButtonMessage(recipientId) {
 
   callSendAPI(messageData);
 }
-
-/*
- * Send a Structured Message (Generic Message type) using the Send API.
- *
- */
-function sendGenericMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: "rift",
-            subtitle: "Next-generation virtual reality",
-            item_url: "https://www.oculus.com/en-us/rift/",
-            image_url: SERVER_URL + "/assets/rift.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/rift/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }],
-          }, {
-            title: "touch",
-            subtitle: "Your Hands, Now in VR",
-            item_url: "https://www.oculus.com/en-us/touch/",
-            image_url: SERVER_URL + "/assets/touch.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/touch/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
-            }]
-          }]
-        }
-      }
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
 
 /* Send a message with Quick Reply buttons. */
 function sendQuickReply(recipientId) {
@@ -628,19 +575,19 @@ function sendQuickReply(recipientId) {
       text: "wat does chief human wantz to noe?",
       quick_replies: [
         {
-          "content_type":"text",
+          "content_type":"postback",
           "title":"Iz MRT brokez right now?",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
+          "payload":"mrt_status_check_payload"
         },
         {
-          "content_type":"text",
+          "content_type":"postback",
           "title":"Show me yur peepurs!!",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
+          "payload":"show_image_payload"
         },
         {
-          "content_type":"text",
+          "content_type":"postback",
           "title":"Muv me with ur gifs",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
+          "payload":"show_gif_payload"
         }
       ]
     }
