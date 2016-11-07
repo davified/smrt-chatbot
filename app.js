@@ -550,11 +550,11 @@ function sendButtonMessage(recipientId) {
           text: "wat does chief human wantz to noe? Choose 1 opshun:",
           buttons:[{
             type: "postback",
-            title: "Iz MRT brokez right now?",
+            title: "Iz MRT brokez now?",
             payload: "mrt_status_check_payload"
           }, {
             type: "postback",
-            title: "Show me yur peepurs!!",
+            title: "Show me yur peepurs!",
             payload: "show_image_payload"
           }, {
             type: "postback",
