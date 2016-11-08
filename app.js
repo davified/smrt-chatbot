@@ -113,7 +113,7 @@ app.get('/resetcountluituckyew', function(req,res) {
   res.status(200)
 })
 
-app.get('breakdownTweets', function(req,res) {
+app.get('/breakdownTweets', function(req,res) {
   res.json({breakdownTweetsCount: breakdownTweetsCount})
 })
 
@@ -179,7 +179,7 @@ function receivedAuthentication (event) {
 /* SETTING UP TWITTER STREAM TO LISTEN FOR MRT BREAKDOWN TRENDS IN TWITTER */
 
 // setting up variables for checking twitter stream for MRT breakdowns
-var anyTrainBreakdown = false
+var anyTrainBreakdown
 var breakdownTweetsCount = 0
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -190,7 +190,7 @@ const twitter = new Twit({
 
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
-  track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl'
+  track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl,ewl,nsl'
 // locations: '1.267016, 103.618248, 1.467459, 104.026802'
 })
 
