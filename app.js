@@ -416,7 +416,7 @@ function receivedAccountLink (event) {
 }
 
 // Send MRT status
-function sendMRTStatus (recipientId, anyTrainBreakdown) {
+function sendMRTStatus (recipientId, anyTrainBreakdown) { 
   noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit in ur pants', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === false) {
