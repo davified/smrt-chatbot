@@ -369,11 +369,11 @@ function receivedPostback (event) {
     'at %d', senderID, recipientID, payload, timeOfPostback)
 
   if (payload === 'mrt_status_check_payload') {
-    sendMRTStatus(anyTrainBreakdown, senderID)
+    sendMRTStatus(senderID)
   } else if (payload === 'show_gif_payload') {
-    sendGifMessage(anyTrainBreakdown, senderID)
+    sendGifMessage(senderID)
   } else if (payload === 'show_image_payload') {
-    sendImageMessage(anyTrainBreakdown, senderID)
+    sendImageMessage(senderID)
   }
 }
 
