@@ -1,135 +1,117 @@
 /* jshint node: true, devel: true */
-
-const
-  bodyParser = require('body-parser'),
+const bodyParser = require('body-parser'),
   config = require('config'),
   crypto = require('crypto'),
   express = require('express'),
   https = require('https'),
-  request = require('request');
-  Twit = require('twit')
-
+  request = require('request')
+Twit = require('twit')
 require('dotenv').config()
-var app = express();
-var anyTrainBreakdown = false
-var breakdownTweetsCount = 0
 
-const twitter = new Twit({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token: process.env.TWITTER_ACCESS_TOKEN,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-})
-
-function generateRandomInteger(min,max) {
-    return Math.floor(Math.random()*(max-min)+min);
-}
-
-app.set('port', process.env.PORT || 5000);
-app.set('view engine', 'ejs');
-app.use(bodyParser.json({ verify: verifyRequestSignature }));
-app.use(express.static('public'));
+var app = express()
+app.set('port', process.env.PORT || 5000)
+app.set('view engine', 'ejs')
+app.use(bodyParser.json({ verify: verifyRequestSignature }))
+app.use(express.static('public'))
 
 // App Secret can be retrieved from the App Dashboard
 const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ?
   process.env.MESSENGER_APP_SECRET :
-  config.get('appSecret');
+  config.get('appSecret')
 
 // Arbitrary value used to validate a webhook
 const VALIDATION_TOKEN = (process.env.MESSENGER_VALIDATION_TOKEN) ?
   (process.env.MESSENGER_VALIDATION_TOKEN) :
-  config.get('validationToken');
+  config.get('validationToken')
 
 // Generate a page access token for your page from the App Dashboard
 const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
   (process.env.MESSENGER_PAGE_ACCESS_TOKEN) :
-  config.get('pageAccessToken');
+  config.get('pageAccessToken')
 
 // URL where the app is running (include protocol). Used to point to scripts and
 // assets located at this address.
 const SERVER_URL = (process.env.SERVER_URL) ?
   (process.env.SERVER_URL) :
-  config.get('serverURL');
+  config.get('serverURL')
 
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
-  console.error("Missing config values");
-  process.exit(1);
+  console.error('Missing config values')
+  process.exit(1)
 }
 
 // setting up webhook
-app.get('/webhook', function(req, res) {
+app.get('/webhook', function (req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
-      req.query['hub.verify_token'] === VALIDATION_TOKEN) {
-    console.log("Validating webhook");
-    res.status(200).send(req.query['hub.challenge']);
+    req.query['hub.verify_token'] === VALIDATION_TOKEN) {
+    console.log('Validating webhook')
+    res.status(200).send(req.query['hub.challenge'])
   } else {
-    console.error("Failed validation. Make sure the validation tokens match.");
-    res.sendStatus(403);
+    console.error('Failed validation. Make sure the validation tokens match.')
+    res.sendStatus(403)
   }
-});
+})
 
 /* All callbacks for Messenger are POST-ed. */
 app.post('/webhook', function (req, res) {
-  var data = req.body;
+  var data = req.body
 
   // Make sure this is a page subscription
   if (data.object == 'page') {
     // Iterate over each entry
     // There may be multiple if batched
-    data.entry.forEach(function(pageEntry) {
-      var pageID = pageEntry.id;
-      var timeOfEvent = pageEntry.time;
+    data.entry.forEach(function (pageEntry) {
+      var pageID = pageEntry.id
+      var timeOfEvent = pageEntry.time
 
       // Iterate over each messaging event
-      pageEntry.messaging.forEach(function(messagingEvent) {
+      pageEntry.messaging.forEach(function (messagingEvent) {
         if (messagingEvent.optin) {
-          receivedAuthentication(messagingEvent);
+          receivedAuthentication(messagingEvent)
         } else if (messagingEvent.message) {
-          receivedMessage(messagingEvent);
+          receivedMessage(messagingEvent)
         } else if (messagingEvent.delivery) {
-          receivedDeliveryConfirmation(messagingEvent);
+          receivedDeliveryConfirmation(messagingEvent)
         } else if (messagingEvent.postback) {
-          receivedPostback(messagingEvent);
+          receivedPostback(messagingEvent)
         } else if (messagingEvent.read) {
-          receivedMessageRead(messagingEvent);
+          receivedMessageRead(messagingEvent)
         } else if (messagingEvent.account_linking) {
-          receivedAccountLink(messagingEvent);
+          receivedAccountLink(messagingEvent)
         } else {
-          console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+          console.log('Webhook received unknown messagingEvent: ', messagingEvent)
         }
-      });
-    });
+      })
+    })
 
-    // Assume all went well.
-    //
-    // You must send back a 200, within 20 seconds, to let us know you've
-    // successfully received the callback. Otherwise, the request will time out.
-    res.sendStatus(200);
+    // Assume all went well. You must send back a 200, within 20 seconds, to let us know you've successfully received the callback. Otherwise, the request will time out.
+    res.sendStatus(200)
   }
-});
+})
 
-/*
- * This path is used for account linking. The account linking call-to-action
- * (sendAccountLinking) is pointed to this URL.
- *
- */
-app.get('/authorize', function(req, res) {
-  var accountLinkingToken = req.query.account_linking_token;
-  var redirectURI = req.query.redirect_uri;
+/* This path is used for account linking. The account linking call-to-action (sendAccountLinking) is pointed to this URL. */
+app.get('/authorize', function (req, res) {
+  var accountLinkingToken = req.query.account_linking_token
+  var redirectURI = req.query.redirect_uri
 
   // Authorization Code should be generated per user by the developer. This will
   // be passed to the Account Linking callback.
-  var authCode = "1234567890";
+  var authCode = '1234567890'
 
   // Redirect users to this URI on successful login
-  var redirectURISuccess = redirectURI + "&authorization_code=" + authCode;
+  var redirectURISuccess = redirectURI + '&authorization_code=' + authCode
 
   res.render('authorize', {
     accountLinkingToken: accountLinkingToken,
     redirectURI: redirectURI,
     redirectURISuccess: redirectURISuccess
-  });
-});
+  })
+})
+
+app.get('/resetcountluituckyew', function(req,res) {
+  breakdownTweetsCount = 0
+  res.status(200)
+})
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from
@@ -139,24 +121,24 @@ app.get('/authorize', function(req, res) {
  * https://developers.facebook.com/docs/graph-api/webhooks#setup
  *
  */
-function verifyRequestSignature(req, res, buf) {
-  var signature = req.headers["x-hub-signature"];
+function verifyRequestSignature (req, res, buf) {
+  var signature = req.headers['x-hub-signature']
 
   if (!signature) {
     // For testing, let's log an error. In production, you should throw an
     // error.
-    console.error("Couldn't validate the signature.");
+    console.error("Couldn't validate the signature.")
   } else {
-    var elements = signature.split('=');
-    var method = elements[0];
-    var signatureHash = elements[1];
+    var elements = signature.split('=')
+    var method = elements[0]
+    var signatureHash = elements[1]
 
     var expectedHash = crypto.createHmac('sha1', APP_SECRET)
-                        .update(buf)
-                        .digest('hex');
+      .update(buf)
+      .digest('hex')
 
     if (signatureHash != expectedHash) {
-      throw new Error("Couldn't validate the request signature.");
+      throw new Error("Couldn't validate the request signature.")
     }
   }
 }
@@ -169,75 +151,92 @@ function verifyRequestSignature(req, res, buf) {
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/authentication
  *
  */
-function receivedAuthentication(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfAuth = event.timestamp;
+function receivedAuthentication (event) {
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
+  var timeOfAuth = event.timestamp
 
   // The 'ref' field is set in the 'Send to Messenger' plugin, in the 'data-ref'
   // The developer can set this to an arbitrary value to associate the
   // authentication callback with the 'Send to Messenger' click event. This is
   // a way to do account linking when the user clicks the 'Send to Messenger'
   // plugin.
-  var passThroughParam = event.optin.ref;
+  var passThroughParam = event.optin.ref
 
-  console.log("Received authentication for user %d and page %d with pass " +
-    "through param '%s' at %d", senderID, recipientID, passThroughParam,
-    timeOfAuth);
+  console.log('Received authentication for user %d and page %d with pass ' +
+  "through param '%s' at %d", senderID, recipientID, passThroughParam,
+    timeOfAuth)
 
   // When an authentication is received, we'll send a message back to the sender
   // to let them know it was successful.
-  sendTextMessage(senderID, "Authentication successful");
+  sendTextMessage(senderID, 'Authentication successful')
 }
 
-function checkIfBreakdown(tweetText) {
+/* SETTING UP TWITTER STREAM TO LISTEN FOR MRT BREAKDOWN TRENDS IN TWITTER */
+
+// setting up variables for checking twitter stream for MRT breakdowns
+var anyTrainBreakdown = false
+var breakdownTweetsCount = 0
+const twitter = new Twit({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token: process.env.TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+})
+
+// setting up a twitter stream
+var stream = twitter.stream('statuses/filter', {
+  track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl'
+// locations: '1.267016, 103.618248, 1.467459, 104.026802'
+})
+
+// helper functions
+function generateRandomInteger (min, max) {
+  return Math.floor(Math.random() * (max - min) + min)
+}
+
+function checkIfBreakdown (tweetText) {
   tweetText = tweetText.toLowerCase()
-  if (tweetText.match('mrt breakdown|mrt disruption|delay|delayed|delays|disruption|train fault|no train service')) {
+  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service')) {
     breakdownTweetsCount++
-    console.log(`${anyTrainBreakdown}: ${tweetText}`);
+    console.log(`${anyTrainBreakdown}: ${tweetText}`)
   }
 }
 
-function checkIfServiceResumed(tweetText) {
+function checkIfServiceResumed (tweetText) {
   tweetText = tweetText.toLowerCase()
   if (tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
-    console.log(`${anyTrainBreakdown}: ${tweetText}`);
+    console.log(`${anyTrainBreakdown}: ${tweetText}`)
   }
 }
 
-function checkBreakdownTrend(count) {
+function checkBreakdownTrend (count) {
   if (count > 3) {
     anyTrainBreakdown = true
   }
 }
 
-// TWITTER STREAM
-// setting up a twitter stream to listen for tweets which may suggest that there is an MRT breakdown
-var stream = twitter.stream('statuses/filter', {
-  track: 'mrt breakdown,mrt disruption,mrt,lrt,nel,northeast line,north east line,ccl,circle line,ewl,east west line,east-west line,eastwest line,nsl,north south line,north-south line,dtl,downtown line'
-  // locations: '1.267016, 103.618248, 1.467459, 104.026802'
-})
-
 stream.on('tweet', function (tweet) {
+  console.log(`stream tweet(${breakdownTweetsCount}): ${tweet.text}`);
   checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet.text)
   checkBreakdownTrend(breakdownTweetsCount)
 })
 
-var swearWordsArray = ['knn','cheebye','chee bye','fuck','fuk','kannina','kan ni na','pussy','bitch','asshole','arse']
-var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i');
-var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup', 'kitty', 'sup']
-var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i');
+var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
+var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i')
+var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", 'wassup', 'kitty', 'sup']
+var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i')
 var mrtStatusArray = ['mrt', 'status', 'any breakdown']
-var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i');
+var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i')
 
-function categorizeMessage(message) {
+function categorizeMessage (message) {
   if (swearWordsRegex.test(message)) { // Contains the accepted word
     return 'swear word'
   } else if (greetingsRegex.test(message)) {
     return 'greetings'
-  } else if (mrtStatusRegex.test(message)){
+  } else if (mrtStatusRegex.test(message)) {
     return 'mrt status check'
   } else if (message.slice(-1) === '?') {
     return 'question'
@@ -252,38 +251,38 @@ function categorizeMessage(message) {
  * This event is called when a message is sent to your page. The 'message'
  * object format can vary depending on the kind of message that was received.
 */
-function receivedMessage(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfMessage = event.timestamp;
-  var message = event.message;
+function receivedMessage (event) {
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
+  var timeOfMessage = event.timestamp
+  var message = event.message
 
-  console.log("Received message for user %d and page %d at %d with message:",
-    senderID, recipientID, timeOfMessage);
-  console.log(JSON.stringify(message));
+  console.log('Received message for user %d and page %d at %d with message:',
+    senderID, recipientID, timeOfMessage)
+  console.log(JSON.stringify(message))
 
-  var isEcho = message.is_echo;
-  var messageId = message.mid;
-  var appId = message.app_id;
-  var metadata = message.metadata;
+  var isEcho = message.is_echo
+  var messageId = message.mid
+  var appId = message.app_id
+  var metadata = message.metadata
 
   // You may get a text or attachment but not both
-  var messageText = message.text;
-  var messageAttachments = message.attachments;
-  var quickReply = message.quick_reply;
+  var messageText = message.text
+  var messageAttachments = message.attachments
+  var quickReply = message.quick_reply
 
   if (isEcho) {
     // Just logging message echoes to console
-    console.log("Received echo for message %s and app %d with metadata %s",
-      messageId, appId, metadata);
-    return;
+    console.log('Received echo for message %s and app %d with metadata %s',
+      messageId, appId, metadata)
+    return
   } else if (quickReply) {
-    var quickReplyPayload = quickReply.payload;
-    console.log("Quick reply for message %s with payload %s",
-      messageId, quickReplyPayload);
+    var quickReplyPayload = quickReply.payload
+    console.log('Quick reply for message %s with payload %s',
+      messageId, quickReplyPayload)
 
-    sendTextMessage(senderID, "Quick reply tapped");
-    return;
+    sendTextMessage(senderID, 'Quick reply tapped')
+    return
   }
 
   if (messageText) {
@@ -293,34 +292,33 @@ function receivedMessage(event) {
     messageCategory = categorizeMessage(messageText)
     switch (messageCategory) {
       case 'greetings':
-        sendGreetingsResponse(senderID);
-        break;
+        sendGreetingsResponse(senderID)
+        break
 
       case 'swear word':
-        sendSwearWordResponse(senderID);
-        break;
+        sendSwearWordResponse(senderID)
+        break
 
       case 'not sure':
         sendButtonMessage(senderID)
-        break;
+        break
 
       case 'mrt status check':
-        sendMRTStatus(senderID);
-        break;
+        sendMRTStatus(senderID)
+        break
 
       case 'question':
-        sendQuestionResponse(senderID);
+        sendQuestionResponse(senderID)
         sendButtonMessage(senderID)
         break
 
       default:
         sendButtonMessage(senderID)
-      }
+    }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Wow. Tt iz kind of human to send chief cat beeg files");
+    sendTextMessage(senderID, 'Wow. Tt iz kind of human to send chief cat beeg files')
   }
 }
-
 
 /*
  * Delivery Confirmation Event
@@ -329,24 +327,23 @@ function receivedMessage(event) {
  * these fields at https://developers.facebook.com/docs/messenger-platform/webhook-reference/message-delivered
  *
  */
-function receivedDeliveryConfirmation(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var delivery = event.delivery;
-  var messageIDs = delivery.mids;
-  var watermark = delivery.watermark;
-  var sequenceNumber = delivery.seq;
+function receivedDeliveryConfirmation (event) {
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
+  var delivery = event.delivery
+  var messageIDs = delivery.mids
+  var watermark = delivery.watermark
+  var sequenceNumber = delivery.seq
 
   if (messageIDs) {
-    messageIDs.forEach(function(messageID) {
-      console.log("Received delivery confirmation for message ID: %s",
-        messageID);
-    });
+    messageIDs.forEach(function (messageID) {
+      console.log('Received delivery confirmation for message ID: %s',
+        messageID)
+    })
   }
 
-  console.log("All message before %d were delivered.", watermark);
+  console.log('All message before %d were delivered.', watermark)
 }
-
 
 /*
  * Postback Event
@@ -355,17 +352,17 @@ function receivedDeliveryConfirmation(event) {
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/postback-received
  *
  */
-function receivedPostback(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfPostback = event.timestamp;
+function receivedPostback (event) {
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
+  var timeOfPostback = event.timestamp
 
   // The 'payload' param is a developer-defined field which is set in a postback
   // button for Structured Messages.
-  var payload = event.postback.payload;
+  var payload = event.postback.payload
 
   console.log("Received postback for user %d and page %d with payload '%s' " +
-    "at %d", senderID, recipientID, payload, timeOfPostback);
+    'at %d', senderID, recipientID, payload, timeOfPostback)
 
   if (payload === 'mrt_status_check_payload') {
     sendMRTStatus(senderID)
@@ -383,16 +380,16 @@ function receivedPostback(event) {
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/message-read
  *
  */
-function receivedMessageRead(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
+function receivedMessageRead (event) {
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
 
   // All messages before watermark (a timestamp) or sequence have been seen.
-  var watermark = event.read.watermark;
-  var sequenceNumber = event.read.seq;
+  var watermark = event.read.watermark
+  var sequenceNumber = event.read.seq
 
-  console.log("Received message read event for watermark %d and sequence " +
-    "number %d", watermark, sequenceNumber);
+  console.log('Received message read event for watermark %d and sequence ' +
+    'number %d', watermark, sequenceNumber)
 }
 
 /*
@@ -403,24 +400,24 @@ function receivedMessageRead(event) {
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/account-linking
  *
  */
-function receivedAccountLink(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
+function receivedAccountLink (event) {
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
 
-  var status = event.account_linking.status;
-  var authCode = event.account_linking.authorization_code;
+  var status = event.account_linking.status
+  var authCode = event.account_linking.authorization_code
 
-  console.log("Received account link event with for user %d with status %s " +
-    "and auth code %s ", senderID, status, authCode);
+  console.log('Received account link event with for user %d with status %s ' +
+    'and auth code %s ', senderID, status, authCode)
 }
 
 // Send MRT status
-function sendMRTStatus(recipientId) {
+function sendMRTStatus (recipientId) {
   noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit in ur pants', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
-  if (anyTrainBreakdown === true) {
+  if (anyTrainBreakdown === false) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
-  } else if (anyTrainBreakdown === false) {
+  } else if (anyTrainBreakdown === true) {
     mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
   }
 
@@ -430,14 +427,14 @@ function sendMRTStatus(recipientId) {
     },
     message: {
       text: mrtStatusMessage,
-      metadata: "DEVELOPER_DEFINED_METADATA"
+      metadata: 'DEVELOPER_DEFINED_METADATA'
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
-function sendSwearWordResponse(recipientId) {
+function sendSwearWordResponse (recipientId) {
   swearWordsResponseArray = ['Y is u so naughty?', 'earfling cat shud not b so rude', 'U is messing wid da wrong cat.', 'u shud stap swearing', 'swearing iz no gud 4 humans']
 
   var messageData = {
@@ -445,216 +442,214 @@ function sendSwearWordResponse(recipientId) {
       id: recipientId
     },
     message: {
-      text: swearWordsResponseArray[generateRandomInteger(0,swearWordsResponseArray.length)],
-      metadata: "DEVELOPER_DEFINED_METADATA"
+      text: swearWordsResponseArray[generateRandomInteger(0, swearWordsResponseArray.length)],
+      metadata: 'DEVELOPER_DEFINED_METADATA'
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
-function sendGreetingsResponse(recipientId) {
+function sendGreetingsResponse (recipientId) {
   greetingsArray = ['oh hai', 'hi human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
-  generateRandomInteger(0,5)
+  generateRandomInteger(0, 5)
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: greetingsArray[generateRandomInteger(0,greetingsArray.length)],
-      metadata: "DEVELOPER_DEFINED_METADATA"
+      text: greetingsArray[generateRandomInteger(0, greetingsArray.length)],
+      metadata: 'DEVELOPER_DEFINED_METADATA'
     }
-  };
-  callSendAPI(messageData);
+  }
+  callSendAPI(messageData)
 }
 
-function sendQuestionResponse(recipientId) {
+function sendQuestionResponse (recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       text: 'me me no undrstnd yo questshion',
-      metadata: "DEVELOPER_DEFINED_METADATA"
+      metadata: 'DEVELOPER_DEFINED_METADATA'
     }
-  };
-  callSendAPI(messageData);
+  }
+  callSendAPI(messageData)
 }
-
-
 
 /*
  * Send an image using the Send API.
  *
  */
-function sendImageMessage(recipientId) {
+function sendImageMessage (recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       attachment: {
-        type: "image",
+        type: 'image',
         payload: {
-          url: "http://thecatapi.com/api/images/get?api_key=MTM0MjUw"
+          url: 'http://thecatapi.com/api/images/get?api_key=MTM0MjUw'
         }
       }
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /*
  * Send a Gif using the Send API.
  *
  */
-function sendGifMessage(recipientId) {
+function sendGifMessage (recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       attachment: {
-        type: "image",
+        type: 'image',
         payload: {
           // replace with giphy API url
-          url: "http://thecatapi.com/api/images/get?api_key=MTM0MjUw&format=src&type=gif"
+          url: 'http://thecatapi.com/api/images/get?api_key=MTM0MjUw&format=src&type=gif'
         }
       }
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /*
  * Send a text message using the Send API.
  *
  */
-function sendTextMessage(recipientId, messageText) {
+function sendTextMessage (recipientId, messageText) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       text: messageText,
-      metadata: "DEVELOPER_DEFINED_METADATA"
+      metadata: 'DEVELOPER_DEFINED_METADATA'
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /*
  * Send a button message using the Send API.
  *
  */
-function sendButtonMessage(recipientId) {
+function sendButtonMessage (recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       attachment: {
-        type: "template",
+        type: 'template',
         payload: {
-          template_type: "button",
-          text: "wut does human wantz to knoe? click wan ov teh opshuns below",
-          buttons:[{
-            type: "postback",
-            title: "iz teh train broke nao?",
-            payload: "mrt_status_check_payload"
+          template_type: 'button',
+          text: 'wut does human wantz to knoe? click wan ov teh opshuns below',
+          buttons: [{
+            type: 'postback',
+            title: 'iz train broke nao?',
+            payload: 'mrt_status_check_payload'
           }, {
-            type: "postback",
-            title: "show me yur peepurs!",
-            payload: "show_image_payload"
+            type: 'postback',
+            title: 'show me yur peepurs!',
+            payload: 'show_image_payload'
           }, {
-            type: "postback",
-            title: "muv me wif ur gifs",
-            payload: "show_gif_payload"
+            type: 'postback',
+            title: 'muv me wif ur gifs',
+            payload: 'show_gif_payload'
           }]
         }
       }
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /* Send a message with Quick Reply buttons. */
-function sendQuickReply(recipientId) {
+function sendQuickReply (recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: "wat does chief human wantz to noe?",
+      text: 'wat does chief human wantz to noe?',
       quick_replies: [
         {
-          "content_type":"postback",
-          "title":"Iz MRT brokez now?",
-          "payload":"mrt_status_check_payload"
+          'content_type': 'postback',
+          'title': 'Iz MRT brokez now?',
+          'payload': 'mrt_status_check_payload'
         },
         {
-          "content_type":"postback",
-          "title":"Show me yur peepurs!",
-          "payload":"show_image_payload"
+          'content_type': 'postback',
+          'title': 'Show me yur peepurs!',
+          'payload': 'show_image_payload'
         },
         {
-          "content_type":"postback",
-          "title":"Muv me with ur gifs",
-          "payload":"show_gif_payload"
+          'content_type': 'postback',
+          'title': 'Muv me with ur gifs',
+          'payload': 'show_gif_payload'
         }
       ]
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /*
  * Send a read receipt to indicate the message has been read
  *
  */
-function sendReadReceipt(recipientId) {
-  console.log("Sending a read receipt to mark message as seen");
+function sendReadReceipt (recipientId) {
+  console.log('Sending a read receipt to mark message as seen')
 
   var messageData = {
     recipient: {
       id: recipientId
     },
-    sender_action: "mark_seen"
-  };
+    sender_action: 'mark_seen'
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /*
  * Send a message with the account linking call-to-action
  *
  */
-function sendAccountLinking(recipientId) {
+function sendAccountLinking (recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       attachment: {
-        type: "template",
+        type: 'template',
         payload: {
-          template_type: "button",
-          text: "Welcome. Link your account.",
-          buttons:[{
-            type: "account_link",
-            url: SERVER_URL + "/authorize"
+          template_type: 'button',
+          text: 'Welcome. Link your account.',
+          buttons: [{
+            type: 'account_link',
+            url: SERVER_URL + '/authorize'
           }]
         }
       }
     }
-  };
+  }
 
-  callSendAPI(messageData);
+  callSendAPI(messageData)
 }
 
 /*
@@ -662,7 +657,7 @@ function sendAccountLinking(recipientId) {
  * get the message id in a response
  *
  */
-function callSendAPI(messageData) {
+function callSendAPI (messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
     qs: { access_token: PAGE_ACCESS_TOKEN },
@@ -671,25 +666,25 @@ function callSendAPI(messageData) {
 
   }, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
+      var recipientId = body.recipient_id
+      var messageId = body.message_id
 
       if (messageId) {
-        console.log("Successfully sent message with id %s to recipient %s",
-          messageId, recipientId);
+        console.log('Successfully sent message with id %s to recipient %s',
+          messageId, recipientId)
       } else {
-      console.log("Successfully called Send API for recipient %s",
-        recipientId);
+        console.log('Successfully called Send API for recipient %s',
+          recipientId)
       }
     } else {
-      console.error("Failed calling Send API", response.statusCode, response.statusMessage, body.error);
+      console.error('Failed calling Send API', response.statusCode, response.statusMessage, body.error)
     }
-  });
+  })
 }
 
 // Start server
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
+app.listen(app.get('port'), function () {
+  console.log('Node app is running on port', app.get('port'))
+})
 
-module.exports = app;
+module.exports = app
