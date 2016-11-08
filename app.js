@@ -179,7 +179,7 @@ function receivedAuthentication (event) {
 /* SETTING UP TWITTER STREAM TO LISTEN FOR MRT BREAKDOWN TRENDS IN TWITTER */
 
 // setting up variables for checking twitter stream for MRT breakdowns
-var anyTrainBreakdown
+var anyTrainBreakdown = false
 var breakdownTweetsCount = 0
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -222,7 +222,7 @@ function checkBreakdownTrend (count) {
 }
 
 stream.on('tweet', function (tweet) {
-  console.log(`stream tweet(${breakdownTweetsCount}): ${tweet.text}`);
+  console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`);
   checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet.text)
   checkBreakdownTrend(breakdownTweetsCount)
