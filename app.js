@@ -12,6 +12,7 @@ const
 require('dotenv').config()
 var app = express();
 var anyTrainBreakdown = false
+var breakdownTweetsCount = 0
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -189,21 +190,25 @@ function receivedAuthentication(event) {
   sendTextMessage(senderID, "Authentication successful");
 }
 
-
-
 function checkIfBreakdown(tweetText) {
   tweetText = tweetText.toLowerCase()
   if (tweetText.match('mrt breakdown|mrt disruption|delay|delayed|delays|disruption|train fault|no train service')) {
-    anyTrainBreakdown = true
+    breakdownTweetsCount++
     console.log(`${anyTrainBreakdown}: ${tweetText}`);
   }
 }
 
 function checkIfServiceResumed(tweetText) {
   tweetText = tweetText.toLowerCase()
-  if (tweetText.match('back to normal|normal|resume|resumed')) {
+  if (tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
     console.log(`${anyTrainBreakdown}: ${tweetText}`);
+  }
+}
+
+function checkBreakdownTrend(count) {
+  if (count > 3) {
+    anyTrainBreakdown = true
   }
 }
 
@@ -217,6 +222,7 @@ var stream = twitter.stream('statuses/filter', {
 stream.on('tweet', function (tweet) {
   checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet.text)
+  checkBreakdownTrend(breakdownTweetsCount)
 })
 
 var swearWordsArray = ['knn','cheebye','chee bye','fuck','fuk','kannina','kan ni na','pussy','bitch','asshole','arse']
@@ -410,8 +416,8 @@ function receivedAccountLink(event) {
 
 // Send MRT status
 function sendMRTStatus(recipientId) {
-  noBreakdownMessages = ['mrt iz ok. trainz r muving juz fine', 'evryting iz ok. big cat nid not shit in big cat pants', 'no train faultz today. humanz can go 2 wrk']
-  breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz nao spoilz.', 'no train 2day for human']
+  noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit in ur pants', 'no train faultz today. humanz can go 2 wrk']
+  breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === true) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
   } else if (anyTrainBreakdown === false) {
@@ -432,7 +438,7 @@ function sendMRTStatus(recipientId) {
 }
 
 function sendSwearWordResponse(recipientId) {
-  swearWordsResponseArray = ['Y is u so naughty?', 'earfling cat shud not b so rude', 'U is rude 2 da wrong cat. I is not ur boss cat']
+  swearWordsResponseArray = ['Y is u so naughty?', 'earfling cat shud not b so rude', 'U is messing wid da wrong cat.', 'u shud stap swearing', 'swearing iz no gud 4 humans']
 
   var messageData = {
     recipient: {
@@ -490,7 +496,7 @@ function sendImageMessage(recipientId) {
       attachment: {
         type: "image",
         payload: {
-          url: "http://thecatapi.com/api/images/get"
+          url: "http://thecatapi.com/api/images/get?api_key=MTM0MjUw"
         }
       }
     }
@@ -513,7 +519,7 @@ function sendGifMessage(recipientId) {
         type: "image",
         payload: {
           // replace with giphy API url
-          url: "http://thecatapi.com/api/images/get?format=src&type=gif"
+          url: "http://thecatapi.com/api/images/get?api_key=MTM0MjUw&format=src&type=gif"
         }
       }
     }
@@ -565,7 +571,7 @@ function sendButtonMessage(recipientId) {
             payload: "show_image_payload"
           }, {
             type: "postback",
-            title: "muv me with ur gifs",
+            title: "muv me wif ur gifs",
             payload: "show_gif_payload"
           }]
         }
