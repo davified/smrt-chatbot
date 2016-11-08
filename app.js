@@ -21,7 +21,7 @@ const twitter = new Twit({
 })
 
 function generateRandomInteger(min,max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
+    return Math.floor(Math.random()*(max-min)+min);
 }
 
 app.set('port', process.env.PORT || 5000);
@@ -219,9 +219,9 @@ stream.on('tweet', function (tweet) {
   checkIfServiceResumed(tweet.text)
 })
 
-var swearWordsArray = ['knn','cheebye','chee bye','fuck','fk','kan ni na','pussy']
+var swearWordsArray = ['knn','cheebye','chee bye','fuck','fuk','kannina','kan ni na','pussy','bitch','asshole','arse']
 var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i');
-var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup']
+var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', 'what\'s up', 'wassup', 'kitty', 'sup']
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i');
 var mrtStatusArray = ['mrt', 'status', 'any breakdown']
 var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i');
@@ -288,7 +288,6 @@ function receivedMessage(event) {
     switch (messageCategory) {
       case 'greetings':
         sendGreetingsResponse(senderID);
-        sendButtonMessage(senderID)
         break;
 
       case 'swear word':
@@ -555,18 +554,18 @@ function sendButtonMessage(recipientId) {
         type: "template",
         payload: {
           template_type: "button",
-          text: "wat does chief human wantz to noe? Choose 1 opshun:",
+          text: "wut does human wantz to knoe? click wan ov teh opshuns below",
           buttons:[{
             type: "postback",
-            title: "Iz MRT brokez now?",
+            title: "iz teh train broke nao?",
             payload: "mrt_status_check_payload"
           }, {
             type: "postback",
-            title: "Show me yur peepurs!",
+            title: "show me yur peepurs!",
             payload: "show_image_payload"
           }, {
             type: "postback",
-            title: "Muv me with ur gifs",
+            title: "muv me with ur gifs",
             payload: "show_gif_payload"
           }]
         }
