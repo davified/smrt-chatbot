@@ -113,6 +113,10 @@ app.get('/resetcountluituckyew', function(req,res) {
   res.status(200)
 })
 
+app.get('breakdownTweets', function(req,res) {
+  res.json({breakdownTweetsCount: breakdownTweetsCount})
+})
+
 /*
  * Verify that the callback came from Facebook. Using the App Secret from
  * the App Dashboard, we can verify the signature that is sent with each
