@@ -292,6 +292,7 @@ function receivedMessage (event, firstTimeSender) {
         if (firstTimeSender === true) {
           sendFirstPrompt(senderID)
           sendSecondPrompt(senderID)
+          sendThirdPrompt(senderID)
         } else {
           sendGreetingsResponse(senderID)
         }
@@ -473,7 +474,20 @@ function sendSecondPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'i liv in da tunnels n i noe if thar r train breakdownz. ask me by typin anythin',
+      text: 'i liv in da tunnels n i noe if thar r train breakdownz. ask me by typin anythin.',
+      metadata: 'DEVELOPER_DEFINED_METADATA'
+    }
+  }
+  callSendAPI(messageData)
+}
+
+function sendThirdPrompt (recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'oar u can jus type "mrt?"',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
@@ -486,7 +500,7 @@ function sendGifWarning (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'meow. b careful. muvin catz r abt 1 megabite n data charges nt cheap 4 mancat',
+      text: 'meow. b careful. muvin catz r as beeeg as 1 megabite n data charges nt cheap 4 mancat',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
@@ -494,7 +508,7 @@ function sendGifWarning (recipientId) {
 }
 
 function sendGreetingsResponse (recipientId) {
-  greetingsArray = ['oh hai again', 'hi human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
+  greetingsArray = ['oh hai again', 'oh hai human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
   generateRandomInteger(0, 5)
   var messageData = {
     recipient: {
