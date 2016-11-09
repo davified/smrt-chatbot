@@ -291,6 +291,8 @@ function receivedMessage (event, firstTimeSender) {
       case 'greetings':
         if (firstTimeSender === true) {
           sendFirstPrompt(senderID)
+          sendSecondPrompt(senderID)
+          sendThirdPrompt(senderID)
         } else {
           sendGreetingsResponse(senderID)
         }
@@ -464,8 +466,6 @@ function sendFirstPrompt (recipientId) {
     }
   }
   callSendAPI(messageData)
-  sendSecondPrompt(recipientId)
-  sendThirdPrompt(recipientId)
 }
 
 function sendSecondPrompt (recipientId) {
@@ -487,7 +487,7 @@ function sendThirdPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'oar u can jus type "mrt?"',
+      text: 'oar u can jus type "mrt status"',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
