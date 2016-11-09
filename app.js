@@ -124,7 +124,7 @@ app.get('/resetcountluituckyew', function (req, res) {
 })
 
 app.get('/breakdownTweets', function (req, res) {
-  breakdownTweets++
+  breakdownTweetsCount++
   res.json({breakdownTweetsCount: breakdownTweetsCount})
 })
 
