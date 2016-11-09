@@ -461,7 +461,7 @@ function sendFirstPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'oh hai. i m mrt cat',
+      text: 'i m mrt cat',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
@@ -474,7 +474,7 @@ function sendSecondPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'i liv in da tunnels n i noe if thar r train breakdownz. ask me by typin anythin.',
+      text: 'i liv in da tunnels n i noe if thar r train breakdownz',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
@@ -487,7 +487,7 @@ function sendThirdPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'oar u can jus type "mrt status"',
+      text: 'u can type "mrt status" or type anythin u wan',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
