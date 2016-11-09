@@ -65,8 +65,8 @@ app.use(checkBreakdownStatus)
 /* All callbacks for Messenger are POST-ed. */
 app.post('/webhook', function (req, res) {
   var data = req.body
-  var breakdownTweetsCountNow = req.breakdownTweetsCount
-  var anyTrainBreakdownNow = req.anyTrainBreakdown
+  var currentTweetCount = req.breakdownTweetsCount
+  var trainStatus = req.anyTrainBreakdown
 
   // Make sure this is a page subscription
   if (data.object == 'page') {
@@ -81,11 +81,11 @@ app.post('/webhook', function (req, res) {
         if (messagingEvent.optin) {
           receivedAuthentication(messagingEvent)
         } else if (messagingEvent.message) {
-          receivedMessage(messagingEvent,breakdownTweetsCountNow,anyTrainBreakdownNow)
+          receivedMessage(messagingEvent,currentTweetCount,trainStatus)
         } else if (messagingEvent.delivery) {
           receivedDeliveryConfirmation(messagingEvent)
         } else if (messagingEvent.postback) {
-          receivedPostback(messagingEvent)
+          receivedPostback(messagingEvent, trainStatus)
         } else if (messagingEvent.read) {
           receivedMessageRead(messagingEvent)
         } else if (messagingEvent.account_linking) {
@@ -269,13 +269,13 @@ function categorizeMessage (message) {
  * This event is called when a message is sent to your page. The 'message'
  * object format can vary depending on the kind of message that was received.
 */
-function receivedMessage (event, breakdownTweetsCountNow, anyTrainBreakdownNow) {
+function receivedMessage (event, currentTweetCount, trainStatus) {
   var senderID = event.sender.id
   var recipientID = event.recipient.id
   var timeOfMessage = event.timestamp
   var message = event.message
-  var breakdownTweetsCountNow = breakdownTweetsCountNow
-  var anyTrainBreakdownNow = anyTrainBreakdownNow
+  // var breakdownTweetsCountNow = breakdownTweetsCountNow
+  // var anyTrainBreakdownNow = anyTrainBreakdownNow
 
   console.log('Received message for user %d and page %d at %d with message:',
     senderID, recipientID, timeOfMessage)
@@ -324,7 +324,7 @@ function receivedMessage (event, breakdownTweetsCountNow, anyTrainBreakdownNow) 
         break
 
       case 'mrt status check':
-        sendMRTStatus(senderID, anyTrainBreakdownNow)
+        sendMRTStatus(senderID, trainStatus)
         break
 
       case 'question':
@@ -372,7 +372,7 @@ function receivedDeliveryConfirmation (event) {
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/postback-received
  *
  */
-function receivedPostback (event) {
+function receivedPostback (event, trainStatus) {
   var senderID = event.sender.id
   var recipientID = event.recipient.id
   var timeOfPostback = event.timestamp
@@ -385,7 +385,7 @@ function receivedPostback (event) {
     'at %d', senderID, recipientID, payload, timeOfPostback)
 
   if (payload === 'mrt_status_check_payload') {
-    sendMRTStatus(senderID, anyTrainBreakdownNow)
+    sendMRTStatus(senderID, trainStatus)
   } else if (payload === 'show_gif_payload') {
     sendGifMessage(senderID)
   } else if (payload === 'show_image_payload') {
@@ -432,12 +432,12 @@ function receivedAccountLink (event) {
 }
 
 // Send MRT status
-function sendMRTStatus (recipientId, anyTrainBreakdownNow) {
+function sendMRTStatus (recipientId, trainStatus) {
   noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit in ur pants', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
-  if (anyTrainBreakdownNow === false) {
+  if (trainStatus === false) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
-  } else if (anyTrainBreakdownNow === true) {
+  } else if (trainStatus === true) {
     mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
   }
 
