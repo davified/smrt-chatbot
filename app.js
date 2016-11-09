@@ -371,6 +371,9 @@ function receivedPostback (event) {
     sendMRTStatus(senderID, anyTrainBreakdown)
   } else if (payload === 'show_gif_payload') {
     sendGifMessage(senderID)
+    if (generateRandomInteger(0,4) === 1) {
+      sendGifWarning(senderID)
+    }
   } else if (payload === 'show_image_payload') {
     sendImageMessage(senderID)
   }
@@ -414,7 +417,7 @@ function receivedAccountLink (event) {
 
 // Send MRT status
 function sendMRTStatus (recipientId, anyTrainBreakdown) {
-  noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit in ur pants', 'no train faultz today. humanz can go 2 wrk']
+  noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit yo pants', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === false) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
@@ -471,6 +474,19 @@ function sendSecondPrompt (recipientId) {
     },
     message: {
       text: 'i liv in da tunnels n i noe if thar r train breakdownz. ask me by typin anythin',
+      metadata: 'DEVELOPER_DEFINED_METADATA'
+    }
+  }
+  callSendAPI(messageData)
+}
+
+function sendGifWarning (recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'meow. b careful. muvin catz r abt 1 megabite n data charges nt cheap 4 mancat',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
