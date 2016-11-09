@@ -290,8 +290,8 @@ function receivedMessage (event, firstTimeSender) {
     switch (messageCategory) {
       case 'greetings':
         if (firstTimeSender === true) {
-          sendGreetingsResponse(senderID)
           sendFirstPrompt(senderID)
+          sendSecondPrompt(senderID)
         } else {
           sendGreetingsResponse(senderID)
         }
@@ -457,7 +457,20 @@ function sendFirstPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'oh hai. i m mrt cat. i liv in da tunnels n i noe if thar r any train breakdownz. jus type anythin',
+      text: 'oh hai. i m mrt cat',
+      metadata: 'DEVELOPER_DEFINED_METADATA'
+    }
+  }
+  callSendAPI(messageData)
+}
+
+function sendSecondPrompt (recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'i liv in da tunnels n i noe if thar r train breakdownz. ask me by typin anythin',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
