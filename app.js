@@ -291,8 +291,6 @@ function receivedMessage (event, firstTimeSender) {
       case 'greetings':
         if (firstTimeSender === true) {
           sendFirstPrompt(senderID)
-          sendSecondPrompt(senderID)
-          sendThirdPrompt(senderID)
         } else {
           sendGreetingsResponse(senderID)
         }
@@ -466,6 +464,8 @@ function sendFirstPrompt (recipientId) {
     }
   }
   callSendAPI(messageData)
+  sendSecondPrompt(recipientId)
+  sendThirdPrompt(recipientId)
 }
 
 function sendSecondPrompt (recipientId) {
