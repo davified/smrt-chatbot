@@ -457,7 +457,7 @@ function sendFirstPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'i m mrt cat. i liv in da tunnels n i noe if thar r any train breakdownz. jus type "mrt?"',
+      text: 'oh hai. i m mrt cat. i liv in da tunnels n i noe if thar r any train breakdownz. jus type anythin',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
@@ -465,7 +465,7 @@ function sendFirstPrompt (recipientId) {
 }
 
 function sendGreetingsResponse (recipientId) {
-  greetingsArray = ['oh hai', 'hi human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
+  greetingsArray = ['oh hai again', 'hi human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
   generateRandomInteger(0, 5)
   var messageData = {
     recipient: {
