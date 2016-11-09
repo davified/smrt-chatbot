@@ -95,8 +95,7 @@ app.get('/authorize', function (req, res) {
   var accountLinkingToken = req.query.account_linking_token
   var redirectURI = req.query.redirect_uri
 
-  // Authorization Code should be generated per user by the developer. This will
-  // be passed to the Account Linking callback.
+  // Authorization Code should be generated per user by the developer. This will be passed to the Account Linking callback.
   var authCode = '1234567890'
 
   // Redirect users to this URI on successful login
@@ -109,8 +108,15 @@ app.get('/authorize', function (req, res) {
   })
 })
 
-app.get('/resetcountluituckyew', function (req, res) {
+app.get('/luituckyew', function (req, res) {
   breakdownTweetsCount = 0
+  anyTrainBreakdown = false
+  res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
+})
+
+app.get('/setbreakdown', function (req, res) {
+  breakdownTweetsCount = 6
+  anyTrainBreakdown = true
   res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
@@ -118,13 +124,9 @@ app.get('/breakdownTweets', function (req, res) {
   res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
-/*
- * Verify that the callback came from Facebook. Using the App Secret from
+/* Verify that the callback came from Facebook. Using the App Secret from
  * the App Dashboard, we can verify the signature that is sent with each
  * callback in the x-hub-signature field, located in the header.
- *
- * https://developers.facebook.com/docs/graph-api/webhooks#setup
- *
  */
 function verifyRequestSignature (req, res, buf) {
   var signature = req.headers['x-hub-signature']
@@ -148,9 +150,7 @@ function verifyRequestSignature (req, res, buf) {
   }
 }
 
-/*
- * Authorization Event
- *
+/* Authorization Event
  * The value for 'optin.ref' is defined in the entry point. For the "Send to
  * Messenger" plugin, it is the 'data-ref' field. Read more at
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/authentication
@@ -212,6 +212,7 @@ function checkIfServiceResumed (tweetText) {
   tweetText = tweetText.toLowerCase()
   if (tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
+    breakdownTweetsCount = 0
     console.log(`${anyTrainBreakdown}: ${tweetText}`)
   }
 }
@@ -659,11 +660,7 @@ function sendAccountLinking (recipientId) {
   callSendAPI(messageData)
 }
 
-/*
- * Call the Send API. The message data goes in the body. If successful, we'll
- * get the message id in a response
- *
- */
+/* Call the Send API. The message data goes in the body. If successful, we'll get the message id in a response */
 function callSendAPI (messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
