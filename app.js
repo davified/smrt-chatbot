@@ -54,13 +54,13 @@ app.get('/webhook', function (req, res) {
   }
 })
 
-function checkBreakdownStatus (req, res, next) {
-  req.anyTrainBreakdown = anyTrainBreakdown
-  req.breakdownTweetsCount = breakdownTweetsCount
-  next()
-}
-
-app.use(checkBreakdownStatus)
+// function checkBreakdownStatus (req, res, next) {
+//   req.anyTrainBreakdown = anyTrainBreakdown
+//   req.breakdownTweetsCount = breakdownTweetsCount
+//   next()
+// }
+//
+// app.use(checkBreakdownStatus)
 
 /* All callbacks for Messenger are POST-ed. */
 app.post('/webhook', function (req, res) {
@@ -124,7 +124,8 @@ app.get('/resetcountluituckyew', function (req, res) {
 })
 
 app.get('/breakdownTweets', function (req, res) {
-  res.json({breakdownTweetsCount: req.breakdownTweetsCount})
+  breakdownTweets++
+  res.json({breakdownTweetsCount: breakdownTweetsCount})
 })
 
 /*
