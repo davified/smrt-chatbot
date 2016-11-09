@@ -54,22 +54,13 @@ app.get('/webhook', function (req, res) {
   }
 })
 
-// function checkBreakdownStatus (req, res, next) {
-//   req.anyTrainBreakdown = anyTrainBreakdown
-//   req.breakdownTweetsCount = breakdownTweetsCount
-//   next()
-// }
-//
-// app.use(checkBreakdownStatus)
-
 /* All callbacks for Messenger are POST-ed. */
 app.post('/webhook', function (req, res) {
   var data = req.body
 
   // Make sure this is a page subscription
   if (data.object == 'page') {
-    // Iterate over each entry
-    // There may be multiple if batched
+    // Iterate over each entry. There may be multiple if batched
     data.entry.forEach(function (pageEntry) {
       var pageID = pageEntry.id
       var timeOfEvent = pageEntry.time
@@ -120,11 +111,11 @@ app.get('/authorize', function (req, res) {
 
 app.get('/resetcountluituckyew', function (req, res) {
   breakdownTweetsCount = 0
-  res.status(200)
+  res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
 app.get('/breakdownTweets', function (req, res) {
-  res.json({breakdownTweetsCount: breakdownTweetsCount})
+  res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
 /*
@@ -227,7 +218,7 @@ function checkIfServiceResumed (tweetText) {
 
 function checkBreakdownTrend (count) {
   console.log(`CHECKING BREAKDOWN TRNED: ${count}`)
-  if (count > 3) {
+  if (count > 5) {
     anyTrainBreakdown = true
     console.log('TRUEEEE')
   }
