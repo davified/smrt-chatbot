@@ -62,11 +62,17 @@ app.post('/webhook', function (req, res) {
   if (data.object == 'page') {
     // Iterate over each entry. There may be multiple if batched
     data.entry.forEach(function (pageEntry) {
+      console.log('1----');
+      console.log(data);
+      console.log('2----');
+      console.log(pageEntry);
       var pageID = pageEntry.id
       var timeOfEvent = pageEntry.time
 
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function (messagingEvent) {
+        console.log('3------');
+        console.log(messagingEvent);
         if (messagingEvent.optin) {
           receivedAuthentication(messagingEvent)
         } else if (messagingEvent.message) {
@@ -199,8 +205,8 @@ function checkIfServiceResumed (tweetText) {
 }
 
 function checkBreakdownTrend (count) {
-  console.log(`CHECKING BREAKDOWN TRNED: ${count}`)
-  if (count > 5) {
+  console.log(`CHECKING BREAKDOWN TREND: ${count}`)
+  if (count > 3) {
     anyTrainBreakdown = true
   }
 }
@@ -378,9 +384,7 @@ function receivedMessageRead (event) {
     'number %d', watermark, sequenceNumber)
 }
 
-/*
- * Account Link Event
- *
+/* Account Link Event
  * This event is called when the Link Account or UnLink Account action has been
  * tapped.
  * https://developers.facebook.com/docs/messenger-platform/webhook-reference/account-linking
