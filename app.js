@@ -62,21 +62,23 @@ app.post('/webhook', function (req, res) {
   if (data.object == 'page') {
     // Iterate over each entry. There may be multiple if batched
     data.entry.forEach(function (pageEntry) {
-      console.log('1----');
-      console.log(data);
-      console.log('2----');
-      console.log(pageEntry);
       var pageID = pageEntry.id
       var timeOfEvent = pageEntry.time
 
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function (messagingEvent) {
-        console.log('3------');
-        console.log(messagingEvent);
+        if (listOfSenders.indexOf(messagingEvent.sender.id) === -1) {
+          listOfSenders.push(messagingEvent.sender.id)
+          var firstTimeSender = true
+        } else {
+          var firstTimeSender = false
+        }
+
+
         if (messagingEvent.optin) {
           receivedAuthentication(messagingEvent)
         } else if (messagingEvent.message) {
-          receivedMessage(messagingEvent)
+          receivedMessage(messagingEvent, firstTimeSender)
         } else if (messagingEvent.delivery) {
           receivedDeliveryConfirmation(messagingEvent)
         } else if (messagingEvent.postback) {
@@ -99,6 +101,7 @@ app.post('/webhook', function (req, res) {
 app.get('/luituckyew', function (req, res) {
   breakdownTweetsCount = 0
   anyTrainBreakdown = false
+  listOfSenders = []
   res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
@@ -170,6 +173,8 @@ function receivedAuthentication (event) {
 // setting up variables for checking twitter stream for MRT breakdowns
 var anyTrainBreakdown = false
 var breakdownTweetsCount = 0
+var listOfSenders = []
+
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -243,7 +248,7 @@ function categorizeMessage (message) {
  * This event is called when a message is sent to your page. The 'message'
  * object format can vary depending on the kind of message that was received.
 */
-function receivedMessage (event) {
+function receivedMessage (event, firstTimeSender) {
   var senderID = event.sender.id
   var recipientID = event.recipient.id
   var timeOfMessage = event.timestamp
@@ -284,7 +289,13 @@ function receivedMessage (event) {
     messageCategory = categorizeMessage(messageText)
     switch (messageCategory) {
       case 'greetings':
-        sendGreetingsResponse(senderID)
+        if (firstTimeSender === true) {
+          sendGreetingsResponse(senderID)
+          sendFirstPrompt(senderID)
+        } else {
+          sendGreetingsResponse(senderID)
+        }
+
         break
 
       case 'swear word':
@@ -437,6 +448,19 @@ function sendSwearWordResponse (recipientId) {
     }
   }
 
+  callSendAPI(messageData)
+}
+
+function sendFirstPrompt (recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'i m mrt cat. i liv in da tunnels n i noe if thar r any train breakdownz. jus type "mrt?"',
+      metadata: 'DEVELOPER_DEFINED_METADATA'
+    }
+  }
   callSendAPI(messageData)
 }
 
