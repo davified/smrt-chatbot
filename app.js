@@ -1,4 +1,6 @@
 /* jshint node: true, devel: true */
+require('newrelic');
+
 const bodyParser = require('body-parser'),
   config = require('config'),
   crypto = require('crypto'),
