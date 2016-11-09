@@ -90,24 +90,6 @@ app.post('/webhook', function (req, res) {
   }
 })
 
-/* This path is used for account linking. The account linking call-to-action (sendAccountLinking) is pointed to this URL. */
-app.get('/authorize', function (req, res) {
-  var accountLinkingToken = req.query.account_linking_token
-  var redirectURI = req.query.redirect_uri
-
-  // Authorization Code should be generated per user by the developer. This will be passed to the Account Linking callback.
-  var authCode = '1234567890'
-
-  // Redirect users to this URI on successful login
-  var redirectURISuccess = redirectURI + '&authorization_code=' + authCode
-
-  res.render('authorize', {
-    accountLinkingToken: accountLinkingToken,
-    redirectURI: redirectURI,
-    redirectURISuccess: redirectURISuccess
-  })
-})
-
 app.get('/luituckyew', function (req, res) {
   breakdownTweetsCount = 0
   anyTrainBreakdown = false
@@ -213,7 +195,6 @@ function checkIfServiceResumed (tweetText) {
   if (tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
     breakdownTweetsCount = 0
-    console.log(`${anyTrainBreakdown}: ${tweetText}`)
   }
 }
 
@@ -221,7 +202,6 @@ function checkBreakdownTrend (count) {
   console.log(`CHECKING BREAKDOWN TRNED: ${count}`)
   if (count > 5) {
     anyTrainBreakdown = true
-    console.log('TRUEEEE')
   }
 }
 
@@ -253,9 +233,7 @@ function categorizeMessage (message) {
   }
 }
 
-/*
- * Message Event
- *
+/* Message Event
  * This event is called when a message is sent to your page. The 'message'
  * object format can vary depending on the kind of message that was received.
 */
@@ -324,7 +302,7 @@ function receivedMessage (event) {
         sendButtonMessage(senderID)
     }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, 'Wow. Tt iz kind of human to send chief cat beeg files')
+    sendTextMessage(senderID, 'sry human cat. mrt cat can onli read werds')
   }
 }
 
