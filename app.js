@@ -229,6 +229,8 @@ var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", '
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i')
 var mrtStatusArray = ['mrt', 'status', 'any breakdown']
 var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i')
+var gratitudeArray = ['thank', 'thanx', 'xie xie', 'tanq']
+var gratitudeRegex = new RegExp(gratitudeArray.join('|'), 'i')
 
 function categorizeMessage (message) {
   if (swearWordsRegex.test(message)) { // Contains the accepted word
@@ -239,6 +241,8 @@ function categorizeMessage (message) {
     return 'mrt status check'
   } else if (message.slice(-1) === '?') {
     return 'question'
+  } else if (gratitudeRegex.test(message)) {
+    return 'thank you'
   } else {
     return 'not sure'
   }
@@ -314,6 +318,10 @@ function receivedMessage (event, firstTimeSender) {
       case 'question':
         sendQuestionResponse(senderID)
         sendButtonMessage(senderID)
+        break
+
+      case 'thank you':
+        sendThankYouReply(senderID)
         break
 
       default:
@@ -509,7 +517,6 @@ function sendGifWarning (recipientId) {
 
 function sendGreetingsResponse (recipientId) {
   greetingsArray = ['oh hai again', 'oh hai human', 'helloz human', 'harrow man cat', 'greetingz earfling', 'do you haz questshuns 4 me?']
-  generateRandomInteger(0, 5)
   var messageData = {
     recipient: {
       id: recipientId
@@ -534,6 +541,22 @@ function sendQuestionResponse (recipientId) {
   }
   callSendAPI(messageData)
 }
+
+function sendThankYouReply (recipientId) {
+  thankYouRepliesArray = ['mancat iz so sweet', 'u r welcom. can i has cheezburger?', 'doan menshun it', 'ur meowcome']
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: thankYouRepliesArray[generateRandomInteger(0, thankYouRepliesArray.length)],
+      metadata: 'DEVELOPER_DEFINED_METADATA'
+    }
+  }
+  callSendAPI(messageData)
+}
+
+
 
 /*
  * Send an image using the Send API.
