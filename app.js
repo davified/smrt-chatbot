@@ -229,7 +229,7 @@ var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", '
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i')
 var mrtStatusArray = ['mrt', 'status', 'any breakdown']
 var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i')
-var gratitudeArray = ['thank', 'thanx', 'xie xie', 'tanq']
+var gratitudeArray = ['thank', 'thank you', 'thanx', 'xie xie', 'tanq']
 var gratitudeRegex = new RegExp(gratitudeArray.join('|'), 'i')
 
 function categorizeMessage (message) {
@@ -555,8 +555,6 @@ function sendThankYouReply (recipientId) {
   }
   callSendAPI(messageData)
 }
-
-
 
 /*
  * Send an image using the Send API.
