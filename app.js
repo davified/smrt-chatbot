@@ -227,9 +227,9 @@ var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', '
 var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i')
 var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", 'wassup', 'kitty', 'sup']
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i')
-var mrtStatusArray = ['mrt', 'status', 'any breakdown']
+var mrtStatusArray = ['mrt', 'status', 'any breakdown', 'train', 'breakdown']
 var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i')
-var gratitudeArray = ['thank', 'thank you', 'thanx', 'xie xie', 'tanq']
+var gratitudeArray = ['thank', 'thanks', 'thank you', 'thanx', 'xie xie', 'tanq']
 var gratitudeRegex = new RegExp(gratitudeArray.join('|'), 'i')
 
 function categorizeMessage (message) {
