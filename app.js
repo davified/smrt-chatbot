@@ -225,7 +225,7 @@ stream.on('tweet', function (tweet) {
 
 var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
 var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i')
-var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", 'wassup', 'kitty', 'sup']
+var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", 'wassup', 'sup']
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i')
 var mrtStatusArray = ['mrt', 'status', 'any breakdown', 'train', 'breakdown']
 var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i')
