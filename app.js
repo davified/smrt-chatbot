@@ -212,7 +212,7 @@ function generateRandomInteger (min, max) {
 
 function checkIfBreakdown (tweetText) {
   tweetText = tweetText.toLowerCase()
-  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service')) {
+  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand')) {
     breakdownTweetsCount++
     console.log(`${anyTrainBreakdown}: ${tweetText}`)
   }
@@ -248,7 +248,7 @@ stream.on('tweet', function (tweet) {
 
 var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
 var swearWordsRegex = new RegExp(swearWordsArray.join('|'), 'i')
-var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', 'yo', 'oi', "what's up", 'wassup', 'sup']
+var greetingsArray = ['hello', 'hi', 'oh hai', 'hey', "what's up", 'wassup', 'sup']
 var greetingsRegex = new RegExp(greetingsArray.join('|'), 'i')
 var mrtStatusArray = ['mrt', 'status', 'any breakdown', 'train', 'breakdown']
 var mrtStatusRegex = new RegExp(mrtStatusArray.join('|'), 'i')
@@ -323,7 +323,6 @@ function receivedMessage (event, firstTimeSender) {
         } else {
           sendGreetingsResponse(senderID)
         }
-
         break
 
       case 'swear word':
@@ -449,7 +448,7 @@ function receivedAccountLink (event) {
 
 // Send MRT status
 function sendMRTStatus (recipientId, anyTrainBreakdown) {
-  noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. hooman ned not shit yo pants', 'no train faultz today. humanz can go 2 wrk']
+  noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. big cat iz lucky 2day lol', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === false) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
