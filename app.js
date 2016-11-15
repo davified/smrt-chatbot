@@ -14,6 +14,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const User = require('./models/user')
 
 var listOfSenders = []
+var broadcasted = false
 
 User.find({}, function (err, usersArray) {
   if (err) console.log('mongoDB error. cannot get listOfSenders array')
