@@ -17,13 +17,11 @@ var listOfSenders = []
 
 User.find({}, function (err, usersArray) {
   if (err) console.log('mongoDB error. cannot get listOfSenders array')
-  Object.keys(usersArray).forEach(function(key) {
-    //get the value of name
-    var id = usersArray[key]["id"];
-    //push the name string in the array
-    listOfSenders.push(id);
-  });
-  console.log(listOfSenders);
+  Object.keys(usersArray).forEach(function (key) {
+    var id = usersArray[key]['id']
+    listOfSenders.push(id)
+  })
+  console.log(listOfSenders)
 })
 
 var app = express()
@@ -94,7 +92,6 @@ app.post('/webhook', function (req, res) {
         } else {
           var firstTimeSender = false
         }
-
 
         if (messagingEvent.optin) {
           receivedAuthentication(messagingEvent)
@@ -232,6 +229,12 @@ function checkBreakdownTrend (count) {
   console.log(`CHECKING BREAKDOWN TREND: ${count}`)
   if (count > 3) {
     anyTrainBreakdown = true
+    if (broadcasted === false) {
+      listOfSenders.forEach(function(id) {
+        broadcastBreakdownMessage(id)
+      })
+      broadcasted = true
+    }
   }
 }
 
@@ -399,7 +402,7 @@ function receivedPostback (event) {
     sendMRTStatus(senderID, anyTrainBreakdown)
   } else if (payload === 'show_gif_payload') {
     sendGifMessage(senderID)
-    if (generateRandomInteger(0,4) === 1) {
+    if (generateRandomInteger(0, 4) === 1) {
       sendGifWarning(senderID)
     }
   } else if (payload === 'show_image_payload') {
@@ -482,6 +485,19 @@ function sendSwearWordResponse (recipientId) {
   callSendAPI(messageData)
 }
 
+function broadcastBreakdownMessage (recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'uh oh, it lookz lyk train haz broken down. Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates',
+      metadata: 'DEVELOPER_DEFINED_METADATA'
+    }
+  }
+  callSendAPI(messageData)
+}
+
 function sendFirstPrompt (recipientId) {
   var messageData = {
     recipient: {
@@ -514,7 +530,7 @@ function sendThirdPrompt (recipientId) {
       id: recipientId
     },
     message: {
-      text: 'u can type "mrt status" or type anythin u wan',
+      text: 'u can type "mrt status" or type ANYTHIN u wan',
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
