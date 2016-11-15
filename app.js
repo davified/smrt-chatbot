@@ -6,9 +6,25 @@ const bodyParser = require('body-parser'),
   crypto = require('crypto'),
   express = require('express'),
   https = require('https'),
-  request = require('request')
-Twit = require('twit')
+  request = require('request'),
+  mongoose = require('mongoose'),
+  Twit = require('twit')
 require('dotenv').config()
+mongoose.connect(process.env.MONGODB_URI)
+const User = require('./models/user')
+
+var listOfSenders = []
+
+User.find({}, function (err, usersArray) {
+  if (err) console.log('mongoDB error. cannot get listOfSenders array')
+  Object.keys(usersArray).forEach(function(key) {
+    //get the value of name
+    var id = usersArray[key]["id"];
+    //push the name string in the array
+    listOfSenders.push(id);
+  });
+  console.log(listOfSenders);
+})
 
 var app = express()
 app.set('port', process.env.PORT || 5000)
@@ -68,7 +84,12 @@ app.post('/webhook', function (req, res) {
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function (messagingEvent) {
         if (listOfSenders.indexOf(messagingEvent.sender.id) === -1) {
-          listOfSenders.push(messagingEvent.sender.id)
+          //
+          var user = new User({id: messagingEvent.sender.id})
+          user.save((err, user) => {
+            if (err) console.log('mongoDB createUser save failed')
+            listOfSenders.push(messagingEvent.sender.id)
+          })
           var firstTimeSender = true
         } else {
           var firstTimeSender = false
@@ -101,7 +122,6 @@ app.post('/webhook', function (req, res) {
 app.get('/luituckyew', function (req, res) {
   breakdownTweetsCount = 0
   anyTrainBreakdown = false
-  listOfSenders = []
   res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
@@ -173,7 +193,6 @@ function receivedAuthentication (event) {
 // setting up variables for checking twitter stream for MRT breakdowns
 var anyTrainBreakdown = false
 var breakdownTweetsCount = 0
-var listOfSenders = []
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -543,7 +562,7 @@ function sendQuestionResponse (recipientId) {
 }
 
 function sendThankYouReply (recipientId) {
-  thankYouRepliesArray = ['mancat iz so sweet', 'u r welcom. can i has cheezburger?', 'doan menshun it', 'ur meowcome']
+  thankYouRepliesArray = ['u r welcom. can i has cheezburger?', 'doan menshun it', 'ur meowcome']
   var messageData = {
     recipient: {
       id: recipientId
