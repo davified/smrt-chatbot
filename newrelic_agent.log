@@ -154,3 +154,31 @@
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3381,"time":"2016-11-17T12:13:21.798Z","msg":"Starting New Relic for Node.js connection process."}
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3390,"time":"2016-11-17T12:13:32.835Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3390,"time":"2016-11-17T12:13:33.168Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3537,"time":"2016-11-17T12:26:43.564Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3537,"time":"2016-11-17T12:26:43.897Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3537,"time":"2016-11-17T12:28:40.083Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/1471816/applications/32924390","component":"new_relic_response"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3537,"time":"2016-11-17T12:28:40.087Z","msg":"Connected to collector-134.newrelic.com:443 with agent run ID 143888822379363126.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3597,"time":"2016-11-17T12:33:29.741Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3597,"time":"2016-11-17T12:33:30.103Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3597,"time":"2016-11-17T12:33:35.654Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/1471816/applications/32924390","component":"new_relic_response"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3597,"time":"2016-11-17T12:33:35.655Z","msg":"Connected to collector-134.newrelic.com:443 with agent run ID 143888822379384635.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3618,"time":"2016-11-17T12:34:41.436Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3618,"time":"2016-11-17T12:34:41.813Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3618,"time":"2016-11-17T12:34:46.211Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/1471816/applications/32924390","component":"new_relic_response"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3618,"time":"2016-11-17T12:34:46.211Z","msg":"Connected to collector-134.newrelic.com:443 with agent run ID 143888822379389269.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3635,"time":"2016-11-17T12:35:07.501Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3635,"time":"2016-11-17T12:35:07.827Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3638,"time":"2016-11-17T12:35:12.487Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3638,"time":"2016-11-17T12:35:12.658Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3642,"time":"2016-11-17T12:35:14.251Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3642,"time":"2016-11-17T12:35:14.407Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3642,"time":"2016-11-17T12:35:27.194Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/1471816/applications/32924390","component":"new_relic_response"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3642,"time":"2016-11-17T12:35:27.195Z","msg":"Connected to collector-134.newrelic.com:443 with agent run ID 143888822379392355.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3663,"time":"2016-11-17T12:35:51.733Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3663,"time":"2016-11-17T12:35:52.085Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3669,"time":"2016-11-17T12:35:56.018Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3669,"time":"2016-11-17T12:35:56.184Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3681,"time":"2016-11-17T12:36:00.910Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3681,"time":"2016-11-17T12:36:01.207Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3685,"time":"2016-11-17T12:36:04.128Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3685,"time":"2016-11-17T12:36:04.335Z","msg":"Starting New Relic for Node.js connection process."}

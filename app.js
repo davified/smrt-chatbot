@@ -198,7 +198,6 @@ var breakdownTweetsCount = 0
 var breakdownTweetsArray = []
 var resumeTweetsArray = []
 
-
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -208,8 +207,8 @@ const twitter = new Twit({
 
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
-  track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl,ewl,nsl'
-// locations: '1.267016, 103.618248, 1.467459, 104.026802'
+  track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl,ewl,nsl',
+  locations: '103.6182, 1.208323, 104.043014, 1.472212'
 })
 
 // helper functions
