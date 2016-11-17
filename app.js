@@ -237,7 +237,7 @@ function checkIfServiceResumed (tweetText) {
 
 function checkBreakdownTrend (count) {
   console.log(`CHECKING BREAKDOWN TREND: ${count}`)
-  if (count > 2) {
+  if (count > 4) {
     anyTrainBreakdown = true
     if (broadcasted === false) {
       // listOfSenders.forEach(function(id) {
