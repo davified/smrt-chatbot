@@ -133,6 +133,10 @@ app.get('/breakdownTweets', function (req, res) {
   res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
 })
 
+app.get('/dashboard', function (req, res) {
+  res.render('dashboard', {breakdownTweetsArray: breakdownTweetsArray, resumeTweetsArray: resumeTweetsArray})
+})
+
 /* Verify that the callback came from Facebook. Using the App Secret from
  * the App Dashboard, we can verify the signature that is sent with each
  * callback in the x-hub-signature field, located in the header.
@@ -191,6 +195,9 @@ function receivedAuthentication (event) {
 // setting up variables for checking twitter stream for MRT breakdowns
 var anyTrainBreakdown = false
 var breakdownTweetsCount = 0
+var breakdownTweetsArray = []
+var resumeTweetsArray = []
+
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -214,6 +221,7 @@ function checkIfBreakdown (tweetText) {
   tweetText = tweetText.toLowerCase()
   if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk')) {
     breakdownTweetsCount++
+    breakdownTweetsArray.push(tweetText)
     console.log(`${anyTrainBreakdown}: ${tweetText}`)
   }
 }
@@ -224,6 +232,7 @@ function checkIfServiceResumed (tweetText) {
     anyTrainBreakdown = false
     breakdownTweetsCount = 0
     broadcasted = false
+    resumeTweetsArray.push(tweetText)
   }
 }
 
@@ -232,9 +241,9 @@ function checkBreakdownTrend (count) {
   if (count > 3) {
     anyTrainBreakdown = true
     if (broadcasted === false) {
-      listOfSenders.forEach(function(id) {
-        broadcastBreakdownMessage(id)
-      })
+      // listOfSenders.forEach(function(id) {
+      //   broadcastBreakdownMessage(id)
+      // })
       broadcasted = true
     }
   }

@@ -142,3 +142,15 @@
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MacBook-Pro-2.local","pid":10435,"time":"2016-11-09T11:29:22.744Z","msg":"Starting New Relic for Node.js connection process."}
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":1534,"time":"2016-11-15T11:34:52.189Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":1534,"time":"2016-11-15T11:34:52.556Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3245,"time":"2016-11-17T12:08:26.098Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3245,"time":"2016-11-17T12:08:26.465Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3259,"time":"2016-11-17T12:08:41.215Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3259,"time":"2016-11-17T12:08:41.559Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3264,"time":"2016-11-17T12:08:56.243Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3264,"time":"2016-11-17T12:08:56.573Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3285,"time":"2016-11-17T12:09:24.361Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3285,"time":"2016-11-17T12:09:24.684Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3381,"time":"2016-11-17T12:13:21.477Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3381,"time":"2016-11-17T12:13:21.798Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3390,"time":"2016-11-17T12:13:32.835Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2.gateway","pid":3390,"time":"2016-11-17T12:13:33.168Z","msg":"Starting New Relic for Node.js connection process."}

@@ -1,0 +1,33 @@
+<style>
+  .resumeTweetsColumn {
+    background-color: lightgreen
+  }
+
+.breakdownTweetsColumn {
+    background-color: pink;
+  }
+</style>
+
+<h1> MRT CAT DASHBOARD </h1>
+<div class="counter">
+  <p>Breakdown Tweets: <%= breakdownTweetsArray.length %></p>
+  <p>Resume Tweets: <%= resumeTweetsArray.length %></p>
+</div>
+
+<div class="resumeTweetsColumn">
+  <h3>Resume Tweets</h3>
+  <ul>
+  <% for (var i = 0; i < resumeTweetsArray.length; i++) { %>
+    <li><%=resumeTweetsArray[i]%></li>
+  <%}%>
+  </ul>
+</div>
+
+<div class="breakdownTweetsColumn">
+  <h3>Breakdown Tweets</h3>
+  <ul>
+  <% for (var i = 0; i < breakdownTweetsArray.length; i++) { %>
+    <li><%= breakdownTweetsArray[i] %> </li>
+  <% } %>
+  </ul>
+</div>
