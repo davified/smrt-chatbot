@@ -240,9 +240,9 @@ function checkBreakdownTrend (count) {
   if (count > 2) {
     anyTrainBreakdown = true
     if (broadcasted === false) {
-      listOfSenders.forEach(function(id) {
-        broadcastBreakdownMessage(id)
-      })
+      // listOfSenders.forEach(function(id) {
+      //   broadcastBreakdownMessage(id)
+      // })
       broadcasted = true
     }
   }
