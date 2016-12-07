@@ -480,7 +480,7 @@ function receivedAccountLink (event) {
 
 function parseFaultyStations(faultyStations) {
   var msg = "thar appearz 2 b delays @ "
-  for (let i = faultyStations.length - 1; i >= 0 ; i--) {
+  for (var i = faultyStations.length - 1; i >= 0 ; i--) {
     if (i > 1) {
       msg += faultyStations[i] + ", ";
     } else if (i === 1) {
