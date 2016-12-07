@@ -207,8 +207,9 @@ const twitter = new Twit({
 
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
-  track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl,ewl,nsl',
-  locations: '103.6182,1.208323,104.043014,1.472212'
+  track: 'smrt breakdown,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
+  // disrupt
+  // locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
 })
 
 // helper functions
@@ -218,7 +219,7 @@ function generateRandomInteger (min, max) {
 
 function checkIfBreakdown (tweetText) {
   tweetText = tweetText.toLowerCase()
-  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data')) {
+  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel')) {
     breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
     console.log(`${anyTrainBreakdown}: ${tweetText}`)
@@ -249,10 +250,11 @@ function checkBreakdownTrend (count) {
 }
 
 stream.on('tweet', function (tweet) {
-  console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
-  checkIfBreakdown(tweet.text)
-  checkIfServiceResumed(tweet.text)
-  checkBreakdownTrend(breakdownTweetsCount)
+  console.log(tweet);
+  // console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
+  // checkIfBreakdown(tweet.text)
+  // checkIfServiceResumed(tweet.text)
+  // checkBreakdownTrend(breakdownTweetsCount)
 })
 
 var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
