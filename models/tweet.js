@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const TweetSchema = new mongoose.Schema({
-  tweet: String
+  tweet: Object
 })
 
 const Tweet = mongoose.model('Tweet', TweetSchema)

@@ -219,14 +219,14 @@ function generateRandomInteger (min, max) {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
-function checkIfBreakdown (tweetText) {
-  tweetText = tweetText.toLowerCase()
+function checkIfBreakdown (tweet) {
+  tweetText = tweet.text.toLowerCase()
   if (tweetText.match('breakdown|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel')) {
     breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
     identifyFaultyStations(tweetText, stationsList)
 
-    var tweet = new Tweet({tweet: tweetText})
+    var tweet = new Tweet({tweet: tweet})
     tweet.save((err, tweet) => {
       if (err) console.log('mongoDB createTweet save failed')
       console.log('breakdown tweet: ' + tweet);
@@ -276,7 +276,7 @@ function identifyFaultyStations (string, expressions) {
 }
 
 stream.on('tweet', function (tweet) {
-  checkIfBreakdown(tweet.text)
+  checkIfBreakdown(tweet)
   checkIfServiceResumed(tweet)
   checkBreakdownTrend(breakdownTweetsCount)
 })
