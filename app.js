@@ -209,7 +209,7 @@ const twitter = new Twit({
 
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
-  track: 'mrt,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
+  track: 'mrt,train breakdown,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
   follow: [68321763]
 // locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
 })
@@ -261,13 +261,13 @@ function checkBreakdownTrend (count) {
 var stationsList = [/jurong east/, /bukit batok/, /bukit gombak/, /choa chu kang/, /yew tee/, /kranji/, /marsiling/, /woodlands/, /admiralty/, /sembawang/, /canberra/, /yishun/, /khatib/, /yio chu kang/, /ang mo kio/, /bishan/, /braddell/, /toa payoh/, /novena/, /newton/, /orchard/, /somerset/, /marina bay/, /marina south pier/, /pasir ris/, /tampines/, /simei/, /tanah merah/, /bedok/, /kembangan/, /eunos/, /paya lebar/, /aljunied/, /kallang/, /lavender/, /bugis/, /city hall/, /raffles place/, /tanjong pagar/, /outram park/, /tiong bahru/, /redhill/, /queenstown/, /commonwealth/, /buona vista/, /dover/, /clementi/, /chinese garden/, /lakeside/, /boon lay/, /pioneer/, /joo koon/, /expo/, /changi airport/, /harbourfront/, /chinatown/, /clarke quay/, /dhoby ghaut/, /little india/, /farrer park/, /boon keng/, /potong pasir/, /woodleigh/, /serangoon/, /kovan/, /hougang/, /buangkok/, /sengkang/, /punggol/, /bras basah/, /esplanade/, /promenade/, /nicoll highway/, /stadium/, /mountbatten/, /dakota/, /macpherson/, /tai seng/, /bartley/, /lorong chuan/, /marymount/, /caldecott/, /bukit brown/, /botanic gardens/, /farrer road/, /holland village/, /one-north/, /kent ridge/, /haw par villa/, /pasir panjang/, /labrador park/, /telok blangah/, /keppel/, /bayfront/, /bukit panjang/, /cashew/, /hillview/, /beauty world/, /king albert park/, /sixth avenue/, /tan kah kee/, /stevens/, /rochor/, /downtown/, /telok ayer/]
 
 function identifyFaultyStations (string, expressions) {
+  var lowercaseString = string.toLowerCase()
   var len = expressions.length,
     i = 0
-  faultyStations = []
 
   for (i = 0; i < len; i++) {
-    var temp = string.match(expressions[i])
-    if (temp) {
+    var temp = lowercaseString.match(expressions[i])
+    if (temp && faultyStations.indexOf(temp) === -1) {
       faultyStations.push(temp[0])
     }
   }
@@ -276,6 +276,7 @@ function identifyFaultyStations (string, expressions) {
 
 stream.on('tweet', function (tweet) {
   faultyStations = identifyFaultyStations(tweet.text, stationsList)
+  console.log(faultyStations);
   checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet)
   checkBreakdownTrend(breakdownTweetsCount)
