@@ -233,6 +233,7 @@ function checkIfServiceResumed (tweet) {
   if (isLTA && tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
     breakdownTweetsCount = 0
+    faultyStations = []
     broadcasted = false
     resumeTweetsArray.push(tweetText)
   }
@@ -269,12 +270,8 @@ function identifyFaultyStations (string, expressions) {
 }
 
 stream.on('tweet', function (tweet) {
-  console.log(tweet)
-  if (identifyFaultyStations(tweet.text, stationsList).length() !== 0) {
-    faultyStations = identifyFaultyStations(tweet.text, stationsList)
-  }
-  // console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
-  // checkIfBreakdown(tweet.text)
+  faultyStations = identifyFaultyStations(tweet.text, stationsList)
+  checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet)
   checkBreakdownTrend(breakdownTweetsCount)
 })
