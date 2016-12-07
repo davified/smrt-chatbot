@@ -496,12 +496,12 @@ function sendMRTStatus (recipientId, anyTrainBreakdown, faultyStations) {
   noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. big cat iz lucky 2day lol', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === false) {
-    mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
+    mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)] + ' ' + recipientId
   } else if (anyTrainBreakdown === true) {
     if (faultyStations.length !== 0) {
-      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates' + recipientId
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
     } else {
-      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates' + recipientId
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
     }
   }
   console.log(recipientId);
