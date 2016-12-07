@@ -12,6 +12,7 @@ const bodyParser = require('body-parser'),
 require('dotenv').config()
 mongoose.connect(process.env.MONGODB_URI)
 const User = require('./models/user')
+const Tweet = require('./models/tweet')
 
 var listOfSenders = []
 var broadcasted = false
@@ -223,7 +224,11 @@ function checkIfBreakdown (tweetText) {
   if (tweetText.match('mrt breakdown|mrt disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel')) {
     breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
-    console.log(`${anyTrainBreakdown}: ${tweetText}`)
+    var tweet = new Tweet({tweet: tweetText})
+    tweet.save((err, tweet) => {
+      if (err) console.log('mongoDB createTweet save failed')
+      console.log('breakdown tweet: ' + tweet);
+    })
   }
 }
 
@@ -241,7 +246,6 @@ function checkIfServiceResumed (tweet) {
 }
 
 function checkBreakdownTrend (count) {
-  console.log(`CHECKING BREAKDOWN TREND: ${count}`)
   if (count > 2) {
     anyTrainBreakdown = true
     if (broadcasted === false) {
