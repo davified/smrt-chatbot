@@ -208,7 +208,7 @@ const twitter = new Twit({
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
   track: 'mrt breakdown,mrt disruption,mrt,nel,northeast line,north east line,ccl,circle line,east west line,east-west line,eastwest line,nsl,north south line,north-south line,downtown line,dtl,ewl,nsl',
-  locations: '103.6182, 1.208323, 104.043014, 1.472212'
+  locations: '103.6182,1.208323,104.043014,1.472212'
 })
 
 // helper functions
@@ -218,7 +218,7 @@ function generateRandomInteger (min, max) {
 
 function checkIfBreakdown (tweetText) {
   tweetText = tweetText.toLowerCase()
-  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway')) {
+  if (tweetText.match('mrt breakdown|mrt disruption|breakdown|delay|delayed|delays|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data')) {
     breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
     console.log(`${anyTrainBreakdown}: ${tweetText}`)
