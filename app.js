@@ -235,20 +235,19 @@ function checkIfServiceResumed (tweet) {
     breakdownTweetsCount = 0
     broadcasted = false
     resumeTweetsArray.push(tweetText)
-//   }
-// }
+  }
+}
 
-  // function checkBreakdownTrend (count) {
-  console.log(`CHECKING BREAKDOWN TREND: ${count}`)
-  if (count > 2) {
-    anyTrainBreakdown = true
-    if (broadcasted === false) {
-      // listOfSenders.forEach(function(id) {
-      //   broadcastBreakdownMessage(id)
-      // })
-      broadcastBreakdownMessage(1147915141971758, faultyStations)  // broadcast to myself (david)
-      broadcasted = true
-    }
+// function   checkBreakdownTrend (count) {
+console.log(`CHECKING BREAKDOWN TREND: ${count}`)
+if (count > 2) {
+  anyTrainBreakdown = true
+  if (broadcasted === false) {
+    // listOfSenders.forEach(function(id) {
+    //   broadcastBreakdownMessage(id)
+    // })
+    broadcastBreakdownMessage(1147915141971758, faultyStations) // broadcast to myself (david)
+    broadcasted = true
   }
 }
 
@@ -269,11 +268,12 @@ function identifyFaultyStations (string, expressions) {
 }
 
 stream.on('tweet', function (tweet) {
+  console.log(tweet)
   if (identifyFaultyStations(tweet.text, stationsList).length() !== 0) {
     faultyStations = identifyFaultyStations(tweet.text, stationsList)
   }
-  console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
-  checkIfBreakdown(tweet.text)
+  // console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
+  // checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet)
   checkBreakdownTrend(breakdownTweetsCount)
 })
@@ -478,15 +478,15 @@ function receivedAccountLink (event) {
     'and auth code %s ', senderID, status, authCode)
 }
 
-function parseFaultyStations(faultyStations) {
-  var msg = "thar appearz 2 b delays @ "
-  for (var i = faultyStations.length - 1; i >= 0 ; i--) {
+function parseFaultyStations (faultyStations) {
+  var msg = 'thar appearz 2 b delays @ '
+  for (var i = faultyStations.length - 1; i >= 0; i--) {
     if (i > 1) {
-      msg += faultyStations[i] + ", ";
+      msg += faultyStations[i] + ', '
     } else if (i === 1) {
-      msg += faultyStations[i] + " n ";
+      msg += faultyStations[i] + ' n '
     } else {
-      msg += faultyStations[i];
+      msg += faultyStations[i]
     }
   }
   return msg
