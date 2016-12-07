@@ -235,17 +235,18 @@ function checkIfServiceResumed (tweet) {
     breakdownTweetsCount = 0
     broadcasted = false
     resumeTweetsArray.push(tweetText)
-  }
-}
+//   }
+// }
 
-function checkBreakdownTrend (count) {
+  // function checkBreakdownTrend (count) {
   console.log(`CHECKING BREAKDOWN TREND: ${count}`)
   if (count > 2) {
     anyTrainBreakdown = true
     if (broadcasted === false) {
-      listOfSenders.forEach(function(id) {
-        broadcastBreakdownMessage(id)
-      })
+      // listOfSenders.forEach(function(id) {
+      //   broadcastBreakdownMessage(id)
+      // })
+      broadcastBreakdownMessage(1147915141971758, faultyStations)  // broadcast to myself (david)
       broadcasted = true
     }
   }
@@ -268,14 +269,13 @@ function identifyFaultyStations (string, expressions) {
 }
 
 stream.on('tweet', function (tweet) {
-  console.log(tweet)
   if (identifyFaultyStations(tweet.text, stationsList).length() !== 0) {
     faultyStations = identifyFaultyStations(tweet.text, stationsList)
   }
-  // console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
-  // checkIfBreakdown(tweet.text)
+  console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
+  checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet)
-// checkBreakdownTrend(breakdownTweetsCount)
+  checkBreakdownTrend(breakdownTweetsCount)
 })
 
 var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
@@ -496,7 +496,7 @@ function sendMRTStatus (recipientId, anyTrainBreakdown, faultyStations) {
   noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. big cat iz lucky 2day lol', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === false) {
-    mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)] + ' ' + recipientId
+    mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
   } else if (anyTrainBreakdown === true) {
     if (faultyStations.length !== 0) {
       mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
@@ -504,7 +504,6 @@ function sendMRTStatus (recipientId, anyTrainBreakdown, faultyStations) {
       mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
     }
   }
-  console.log(recipientId);
 
   var messageData = {
     recipient: {
@@ -535,13 +534,17 @@ function sendSwearWordResponse (recipientId) {
   callSendAPI(messageData)
 }
 
-function broadcastBreakdownMessage (recipientId) {
+function broadcastBreakdownMessage (recipientId, faultyStations) {
+  msg = 'uh oh, it lookz lyk train haz broken down. Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+  if (faultyStations.length !== 0) {
+    msg = 'uh oh, it lookz lyk train haz broken down.' + parseFaultyStations(faultyStations) + 'Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+  }
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: 'uh oh, it lookz lyk train haz broken down. Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates',
+      text: msg,
       metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   }
