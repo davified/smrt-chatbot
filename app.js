@@ -499,9 +499,9 @@ function sendMRTStatus (recipientId, anyTrainBreakdown, faultyStations) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
   } else if (anyTrainBreakdown === true) {
     if (faultyStations.length !== 0) {
-      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates' + recipientId
     } else {
-      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates' + recipientId
     }
   }
   console.log(recipientId);
