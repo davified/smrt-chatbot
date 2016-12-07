@@ -224,6 +224,8 @@ function checkIfBreakdown (tweetText) {
   if (tweetText.match('breakdown|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel')) {
     breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
+    identifyFaultyStations(tweetText, stationsList)
+
     var tweet = new Tweet({tweet: tweetText})
     tweet.save((err, tweet) => {
       if (err) console.log('mongoDB createTweet save failed')
@@ -271,12 +273,9 @@ function identifyFaultyStations (string, expressions) {
       faultyStations.push(temp[0])
     }
   }
-  return faultyStations
 }
 
 stream.on('tweet', function (tweet) {
-  faultyStations = identifyFaultyStations(tweet.text, stationsList)
-  console.log(faultyStations);
   checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet)
   checkBreakdownTrend(breakdownTweetsCount)
