@@ -208,8 +208,6 @@ const twitter = new Twit({
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
   track: 'mrt breakdown,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
-  follow: [68321763]
-  // disrupt
   // locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
 })
 
@@ -227,9 +225,11 @@ function checkIfBreakdown (tweetText) {
   }
 }
 
-function checkIfServiceResumed (tweetText) {
-  tweetText = tweetText.toLowerCase()
-  if (tweetText.match('back to normal|resume|resumed')) {
+function checkIfServiceResumed (tweet) {
+  tweetText = tweet.text.toLowerCase()
+  isLTA = tweet.user.id === 68321763 // LTA twitter user id
+
+  if (isLTA && tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
     breakdownTweetsCount = 0
     broadcasted = false
@@ -254,7 +254,7 @@ stream.on('tweet', function (tweet) {
   console.log(tweet);
   // console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
   // checkIfBreakdown(tweet.text)
-  // checkIfServiceResumed(tweet.text)
+  checkIfServiceResumed(tweet)
   // checkBreakdownTrend(breakdownTweetsCount)
 })
 
