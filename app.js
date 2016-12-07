@@ -197,6 +197,7 @@ var anyTrainBreakdown = false
 var breakdownTweetsCount = 0
 var breakdownTweetsArray = []
 var resumeTweetsArray = []
+var faultyStations = []
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -208,7 +209,7 @@ const twitter = new Twit({
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
   track: 'mrt breakdown,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
-  // locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
+// locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
 })
 
 // helper functions
@@ -239,23 +240,42 @@ function checkIfServiceResumed (tweet) {
 
 function checkBreakdownTrend (count) {
   console.log(`CHECKING BREAKDOWN TREND: ${count}`)
-  if (count > 4) {
+  if (count > 2) {
     anyTrainBreakdown = true
     if (broadcasted === false) {
-      // listOfSenders.forEach(function(id) {
-      //   broadcastBreakdownMessage(id)
-      // })
+      listOfSenders.forEach(function(id) {
+        broadcastBreakdownMessage(id)
+      })
       broadcasted = true
     }
   }
 }
 
+var stationsList = [/jurong east/, /bukit batok/, /bukit gombak/, /choa chu kang/, /yew tee/, /kranji/, /marsiling/, /woodlands/, /admiralty/, /sembawang/, /canberra/, /yishun/, /khatib/, /yio chu kang/, /ang mo kio/, /bishan/, /braddell/, /toa payoh/, /novena/, /newton/, /orchard/, /somerset/, /marina bay/, /marina south pier/, /pasir ris/, /tampines/, /simei/, /tanah merah/, /bedok/, /kembangan/, /eunos/, /paya lebar/, /aljunied/, /kallang/, /lavender/, /bugis/, /city hall/, /raffles place/, /tanjong pagar/, /outram park/, /tiong bahru/, /redhill/, /queenstown/, /commonwealth/, /buona vista/, /dover/, /clementi/, /chinese garden/, /lakeside/, /boon lay/, /pioneer/, /joo koon/, /expo/, /changi airport/, /harbourfront/, /chinatown/, /clarke quay/, /dhoby ghaut/, /little india/, /farrer park/, /boon keng/, /potong pasir/, /woodleigh/, /serangoon/, /kovan/, /hougang/, /buangkok/, /sengkang/, /punggol/, /bras basah/, /esplanade/, /promenade/, /nicoll highway/, /stadium/, /mountbatten/, /dakota/, /macpherson/, /tai seng/, /bartley/, /lorong chuan/, /marymount/, /caldecott/, /bukit brown/, /botanic gardens/, /farrer road/, /holland village/, /one-north/, /kent ridge/, /haw par villa/, /pasir panjang/, /labrador park/, /telok blangah/, /keppel/, /bayfront/, /bukit panjang/, /cashew/, /hillview/, /beauty world/, /king albert park/, /sixth avenue/, /tan kah kee/, /stevens/, /rochor/, /downtown/, /telok ayer/]
+
+function identifyFaultyStations (string, expressions) {
+  var len = expressions.length,
+    i = 0
+  faultyStations = []
+
+  for (i = 0; i < len; i++) {
+    var temp = string.match(expressions[i])
+    if (temp) {
+      faultyStations.push(temp[0])
+    }
+  }
+  return faultyStations
+}
+
 stream.on('tweet', function (tweet) {
-  console.log(tweet);
+  console.log(tweet)
+  if (identifyFaultyStations(tweet.text, stationsList).length() !== 0) {
+    faultyStations = identifyFaultyStations(tweet.text, stationsList)
+  }
   // console.log(`mrt breakdown status(${anyTrainBreakdown} | count: ${breakdownTweetsCount}): ${tweet.text}`)
   // checkIfBreakdown(tweet.text)
   checkIfServiceResumed(tweet)
-  // checkBreakdownTrend(breakdownTweetsCount)
+// checkBreakdownTrend(breakdownTweetsCount)
 })
 
 var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
@@ -458,15 +478,33 @@ function receivedAccountLink (event) {
     'and auth code %s ', senderID, status, authCode)
 }
 
+function parseFaultyStations(faultyStations) {
+  var msg = "thar appearz 2 b delays @ "
+  for (let i = faultyStations.length - 1; i >= 0 ; i--) {
+    if (i > 1) {
+      msg += faultyStations[i] + ", ";
+    } else if (i === 1) {
+      msg += faultyStations[i] + " n ";
+    } else {
+      msg += faultyStations[i];
+    }
+  }
+  return msg
+}
 // Send MRT status
-function sendMRTStatus (recipientId, anyTrainBreakdown) {
+function sendMRTStatus (recipientId, anyTrainBreakdown, faultyStations) {
   noBreakdownMessages = ['evrythin iz k. trainz r muving juz fine', 'teh trains r werkin jus fine', 'evryting iz ok. big cat iz lucky 2day lol', 'no train faultz today. humanz can go 2 wrk']
   breakdownMessages = ['mrt iz as broke as ur human ass.', 'train iz spoiled nao lol.', 'no train 2day 4 hooman.', 'u will b stuck on teh train 4 sum tiem', 'uh oh. itz goin 2 b long ride 4 sum peepurs']
   if (anyTrainBreakdown === false) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
   } else if (anyTrainBreakdown === true) {
-    mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+    if (faultyStations.length !== 0) {
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+    } else {
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+    }
   }
+  console.log(recipientId);
 
   var messageData = {
     recipient: {
