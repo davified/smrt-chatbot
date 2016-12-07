@@ -208,7 +208,7 @@ const twitter = new Twit({
 
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
-  track: 'mrt breakdown,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
+  track: 'mrt,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
 // locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
 })
 
@@ -364,7 +364,7 @@ function receivedMessage (event, firstTimeSender) {
         break
 
       case 'mrt status check':
-        sendMRTStatus(senderID, anyTrainBreakdown)
+        sendMRTStatus(senderID, anyTrainBreakdown, faultyStations)
         break
 
       case 'question':

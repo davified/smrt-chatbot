@@ -268,3 +268,9 @@
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":8141,"time":"2016-12-07T10:22:44.419Z","msg":"Connected to collector-226.newrelic.com:443 with agent run ID 143251303326953909.","component":"collector_api"}
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":9955,"time":"2016-12-07T11:57:15.313Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
 {"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":9955,"time":"2016-12-07T11:57:15.679Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":10192,"time":"2016-12-07T12:12:19.923Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":10192,"time":"2016-12-07T12:12:20.262Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":10192,"time":"2016-12-07T12:12:25.613Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/1471816/applications/32924390","component":"new_relic_response"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":10192,"time":"2016-12-07T12:12:25.614Z","msg":"Connected to collector-226.newrelic.com:443 with agent run ID 143251303327428926.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":10230,"time":"2016-12-07T12:13:43.375Z","msg":"Using New Relic for Node.js. Agent version: 1.33.0; Node version: v6.2.2."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Davids-MBP-2","pid":10230,"time":"2016-12-07T12:13:43.545Z","msg":"Starting New Relic for Node.js connection process."}
