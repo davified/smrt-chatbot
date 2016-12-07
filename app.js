@@ -221,7 +221,7 @@ function generateRandomInteger (min, max) {
 
 function checkIfBreakdown (tweetText) {
   tweetText = tweetText.toLowerCase()
-  if (tweetText.match('mrt breakdown|mrt disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel')) {
+  if (tweetText.match('breakdown|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel')) {
     breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
     var tweet = new Tweet({tweet: tweetText})
