@@ -209,7 +209,7 @@ const twitter = new Twit({
 
 // setting up a twitter stream
 var stream = twitter.stream('statuses/filter', {
-  track: 'mrt,train,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
+  track: 'mrt,delay,breakdown,train,mrt breakdown,nel breakdown,dtl breakdown,ewl breakdown,nsl breakdown,northeast line breakdown,north east line breakdown,ccl breakdown,circle line breakdown,east west line breakdown,east-west line breakdown,eastwest line breakdown,north south line breakdown,north-south line breakdown,downtown line breakdown',
   follow: [68321763]
 // locations: '103.6182,1.208323,104.013551,1.472212' //removing locations because Twitter filters tweets by tracked terms || location.
 })
@@ -517,7 +517,7 @@ function receivedAccountLink (event) {
 
 function parseFaultyStations(stations) {
   var msg = " thar appearz 2 b delays ard "
-  for (var i = stations.length - 1; i >= 0 ; i--) {
+  for (var i = stations.length - 1; i > 0 ; i--) {
     if (i > 1) {
       msg += stations[i].station + ", ";
     } else if (i === 1) {
