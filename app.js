@@ -120,7 +120,7 @@ app.post('/webhook', function (req, res) {
 
 app.get('/luituckyew', function (req, res) {
   faultyStations = []
-  confirmedFaultyStations = []
+  confirmedFaultyStations = [{}]
   anyTrainBreakdown = false
   res.json({confirmedFaultyStations: confirmedFaultyStations, faultyStations: faultyStations, anyTrainBreakdown: anyTrainBreakdown})
 })
@@ -198,7 +198,7 @@ var anyTrainBreakdown = false
 var breakdownTweetsArray = []
 var resumeTweetsArray = []
 var faultyStations = []
-var confirmedFaultyStations = []
+var confirmedFaultyStations = [{}]
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -239,30 +239,47 @@ function checkIfServiceResumed (tweet) {
 
   if (isLTA && tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
-    confirmedFaultyStations = []
+    confirmedFaultyStations = [{}]
     faultyStations = []
     broadcasted = false
     resumeTweetsArray.push(tweetText)
   }
 }
 
+function addStationIfNoneExists(array, stationObject) {
+  var isNewFaultyStation = true
+  for (var i = 0; i < array.length; i++) {
+    if (array[i].station === stationObject.station) {
+      isNewFaultyStation = false
+    }
+  }
+
+  if (isNewFaultyStation) {
+    array.push(stationObject)
+  }
+}
+
 function checkBreakdownTrend (arr) {
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].count == 2) {
-      confirmedFaultyStations.push(arr[i])
+    if (arr[i].count > 2) {
+      addStationIfNoneExists(confirmedFaultyStations, arr[i])
       anyTrainBreakdown = true
-      if (broadcasted === false) {
-        // listOfSenders.forEach(function(id) {
-        //   broadcastBreakdownMessage(id)
-        // })
-        broadcastBreakdownMessage(1147915141971758, faultyStations)  // broadcast to myself (david)
-        broadcasted = true
-      }
     }
+  }
+
+  if (broadcasted === false) {
+    // listOfSenders.forEach(function(id) {
+    //   broadcastBreakdownMessage(id)
+    // })
+    broadcastBreakdownMessage(1147915141971758, faultyStations)  // broadcast to myself (david)
+    broadcasted = true
   }
 }
 
 var stationsList = [/jurong east/, /bukit batok/, /bukit gombak/, /choa chu kang/, /yew tee/, /kranji/, /marsiling/, /woodlands/, /admiralty/, /sembawang/, /canberra/, /yishun/, /khatib/, /yio chu kang/, /ang mo kio/, /bishan/, /braddell/, /toa payoh/, /novena/, /newton/, /orchard/, /somerset/, /marina bay/, /marina south pier/, /pasir ris/, /tampines/, /simei/, /tanah merah/, /bedok/, /kembangan/, /eunos/, /paya lebar/, /aljunied/, /kallang/, /lavender/, /bugis/, /city hall/, /raffles place/, /tanjong pagar/, /outram park/, /tiong bahru/, /redhill/, /queenstown/, /commonwealth/, /buona vista/, /dover/, /clementi/, /chinese garden/, /lakeside/, /boon lay/, /pioneer/, /joo koon/, /expo/, /changi airport/, /harbourfront/, /chinatown/, /clarke quay/, /dhoby ghaut/, /little india/, /farrer park/, /boon keng/, /potong pasir/, /woodleigh/, /serangoon/, /kovan/, /hougang/, /buangkok/, /sengkang/, /punggol/, /bras basah/, /esplanade/, /promenade/, /nicoll highway/, /stadium/, /mountbatten/, /dakota/, /macpherson/, /tai seng/, /bartley/, /lorong chuan/, /marymount/, /caldecott/, /bukit brown/, /botanic gardens/, /farrer road/, /holland village/, /one-north/, /kent ridge/, /haw par villa/, /pasir panjang/, /labrador park/, /telok blangah/, /keppel/, /bayfront/, /bukit panjang/, /cashew/, /hillview/, /beauty world/, /king albert park/, /sixth avenue/, /tan kah kee/, /stevens/, /rochor/, /downtown/, /telok ayer/]
+
+// can consider including the following words to catch hashtags. potential downside: they will be counted as a separate object as their long-form version (i.e. jookoon !== joo koon)
+// /jurongeast/, /bukitbatok/, /bukitgombak/, /choachukang/, /cck/, /yewtee/, /yiochukang/, /yck/, /angmokio/, /amk/, /toapayoh/, /marinabay/, /marinasouthpier/, /pasirris/, /tanahmerah/, /payalebar/, /cityhall/, /rafflesplace/, /tanjongpagar/, /outrampark/, /tiongbahru/, /buonavista/, /chinesegarden/, /boonlay/, /jookoon/, /changiairport/, /clarkequay/, /dhobyghaut/, /littleindia/, /farrerpark/, /boonkeng/, /potongpasir/, /brasbasah/, /nicollhighway/, /taiseng/, /lorongchuan/, /bukitbrown/, /botanicgardens/, /farrerroad/, /hollandvillage/, /onenorth/, /kentridge/, /hawparvilla/, /pasirpanjang/, /labradorpark/, /telokblangah/, /bukitpanjang/, /beautyworld/, /kingalbertpark/, /sixthavenue/, /tankahkee/, /telok ayer/
 
 function incrementStationCountOrAdd(arr, station) {
   var newBreakdownStation = false;
