@@ -264,13 +264,15 @@ var stationsList = [/jurong east/, /bukit batok/, /bukit gombak/, /choa chu kang
 
 function identifyFaultyStations (string, expressions) {
   var lowercaseString = string.toLowerCase()
-  var len = expressions.length,
-    i = 0
+  var len = expressions.length
 
   for (i = 0; i < len; i++) {
     var temp = lowercaseString.match(expressions[i])
     if (temp && faultyStations.indexOf(temp) === -1) {
-      faultyStations.push(temp[0])
+      if () {
+        faultyStation = {station: temp[0], count: 1}
+        faultyStations.push(faultyStation)
+      }
     }
   }
 }
