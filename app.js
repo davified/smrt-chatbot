@@ -119,19 +119,19 @@ app.post('/webhook', function (req, res) {
 })
 
 app.get('/luituckyew', function (req, res) {
-  breakdownTweetsCount = 0
+  faultyStations = []
+  confirmedFaultyStations = []
   anyTrainBreakdown = false
-  res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
+  res.json({confirmedFaultyStations: confirmedFaultyStations, faultyStations: faultyStations, anyTrainBreakdown: anyTrainBreakdown})
 })
 
 app.get('/setbreakdown', function (req, res) {
-  breakdownTweetsCount = 6
   anyTrainBreakdown = true
-  res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
+  res.json({confirmedFaultyStations: confirmedFaultyStations, faultyStations: faultyStations, anyTrainBreakdown: anyTrainBreakdown})
 })
 
 app.get('/breakdownTweets', function (req, res) {
-  res.json({breakdownTweetsCount: breakdownTweetsCount, anyTrainBreakdown: anyTrainBreakdown})
+  res.json({confirmedFaultyStations: confirmedFaultyStations, anyTrainBreakdown: anyTrainBreakdown})
 })
 
 app.get('/dashboard', function (req, res) {
@@ -195,10 +195,10 @@ function receivedAuthentication (event) {
 
 // setting up variables for checking twitter stream for MRT breakdowns
 var anyTrainBreakdown = false
-var breakdownTweetsCount = 0
 var breakdownTweetsArray = []
 var resumeTweetsArray = []
 var faultyStations = []
+var confirmedFaultyStations = []
 
 const twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -222,7 +222,6 @@ function generateRandomInteger (min, max) {
 function checkIfBreakdown (tweet) {
   tweetText = tweet.text.toLowerCase()
   if (tweetText.match('breakdown|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel|birthday' && tweet.user.id !== 797468706947223552)) {
-    breakdownTweetsCount++
     breakdownTweetsArray.push(tweetText)
     identifyFaultyStations(tweetText, stationsList)
 
@@ -240,27 +239,46 @@ function checkIfServiceResumed (tweet) {
 
   if (isLTA && tweetText.match('back to normal|resume|resumed')) {
     anyTrainBreakdown = false
-    breakdownTweetsCount = 0
+    confirmedFaultyStations = []
     faultyStations = []
     broadcasted = false
     resumeTweetsArray.push(tweetText)
   }
 }
 
-function checkBreakdownTrend (count) {
-  if (count > 2) {
-    anyTrainBreakdown = true
-    if (broadcasted === false) {
-      // listOfSenders.forEach(function(id) {
-      //   broadcastBreakdownMessage(id)
-      // })
-      broadcastBreakdownMessage(1147915141971758, faultyStations)  // broadcast to myself (david)
-      broadcasted = true
+function checkBreakdownTrend (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].count >= 2) {
+      confirmedFaultyStations.push(arr[i])
+      anyTrainBreakdown = true
+      if (broadcasted === false) {
+        // listOfSenders.forEach(function(id) {
+        //   broadcastBreakdownMessage(id)
+        // })
+        broadcastBreakdownMessage(1147915141971758, faultyStations)  // broadcast to myself (david)
+        broadcasted = true
+      }
     }
   }
 }
 
 var stationsList = [/jurong east/, /bukit batok/, /bukit gombak/, /choa chu kang/, /yew tee/, /kranji/, /marsiling/, /woodlands/, /admiralty/, /sembawang/, /canberra/, /yishun/, /khatib/, /yio chu kang/, /ang mo kio/, /bishan/, /braddell/, /toa payoh/, /novena/, /newton/, /orchard/, /somerset/, /marina bay/, /marina south pier/, /pasir ris/, /tampines/, /simei/, /tanah merah/, /bedok/, /kembangan/, /eunos/, /paya lebar/, /aljunied/, /kallang/, /lavender/, /bugis/, /city hall/, /raffles place/, /tanjong pagar/, /outram park/, /tiong bahru/, /redhill/, /queenstown/, /commonwealth/, /buona vista/, /dover/, /clementi/, /chinese garden/, /lakeside/, /boon lay/, /pioneer/, /joo koon/, /expo/, /changi airport/, /harbourfront/, /chinatown/, /clarke quay/, /dhoby ghaut/, /little india/, /farrer park/, /boon keng/, /potong pasir/, /woodleigh/, /serangoon/, /kovan/, /hougang/, /buangkok/, /sengkang/, /punggol/, /bras basah/, /esplanade/, /promenade/, /nicoll highway/, /stadium/, /mountbatten/, /dakota/, /macpherson/, /tai seng/, /bartley/, /lorong chuan/, /marymount/, /caldecott/, /bukit brown/, /botanic gardens/, /farrer road/, /holland village/, /one-north/, /kent ridge/, /haw par villa/, /pasir panjang/, /labrador park/, /telok blangah/, /keppel/, /bayfront/, /bukit panjang/, /cashew/, /hillview/, /beauty world/, /king albert park/, /sixth avenue/, /tan kah kee/, /stevens/, /rochor/, /downtown/, /telok ayer/]
+
+function incrementStationCountOrAdd(arr, station) {
+  var newBreakdownStation = false;
+
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].station === station) {
+      arr[i].count++
+      return true
+    }
+  }
+  newBreakdownStation = true;
+
+  if (newBreakdownStation) {
+    arr.push({ station: station, count: 1 });
+  }
+}
 
 function identifyFaultyStations (string, expressions) {
   var lowercaseString = string.toLowerCase()
@@ -268,11 +286,8 @@ function identifyFaultyStations (string, expressions) {
 
   for (i = 0; i < len; i++) {
     var temp = lowercaseString.match(expressions[i])
-    if (temp && faultyStations.indexOf(temp) === -1) {
-      if () {
-        faultyStation = {station: temp[0], count: 1}
-        faultyStations.push(faultyStation)
-      }
+    if (temp) {
+      incrementStationCountOrAdd(faultyStations, temp[0])
     }
   }
 }
@@ -280,7 +295,7 @@ function identifyFaultyStations (string, expressions) {
 stream.on('tweet', function (tweet) {
   checkIfBreakdown(tweet)
   checkIfServiceResumed(tweet)
-  checkBreakdownTrend(breakdownTweetsCount)
+  checkBreakdownTrend(faultyStations)
 })
 
 var swearWordsArray = ['knn', 'cheebye', 'chee bye', 'fuck', 'fuk', 'kannina', 'kan ni na', 'pussy', 'bitch', 'asshole', 'arse']
@@ -483,15 +498,15 @@ function receivedAccountLink (event) {
     'and auth code %s ', senderID, status, authCode)
 }
 
-function parseFaultyStations(faultyStations) {
+function parseFaultyStations(stations) {
   var msg = " thar appearz 2 b delays ard "
-  for (var i = faultyStations.length - 1; i >= 0 ; i--) {
+  for (var i = stations.length - 1; i >= 0 ; i--) {
     if (i > 1) {
-      msg += faultyStations[i] + ", ";
+      msg += stations[i].station + ", ";
     } else if (i === 1) {
-      msg += faultyStations[i] + " n ";
+      msg += stations[i].station + " n ";
     } else {
-      msg += faultyStations[i] + ". ";
+      msg += stations[i].station + ". ";
     }
   }
   return msg
@@ -504,7 +519,7 @@ function sendMRTStatus (recipientId, anyTrainBreakdown, faultyStations) {
     mrtStatusMessage = noBreakdownMessages[generateRandomInteger(0, noBreakdownMessages.length)]
   } else if (anyTrainBreakdown === true) {
     if (faultyStations.length !== 0) {
-      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(faultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+      mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + parseFaultyStations(confirmedFaultyStations) + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
     } else {
       mrtStatusMessage = breakdownMessages[generateRandomInteger(0, breakdownMessages.length)] + ' Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
     }
@@ -542,7 +557,7 @@ function sendSwearWordResponse (recipientId) {
 function broadcastBreakdownMessage (recipientId, faultyStations) {
   msg = 'uh oh, it lookz lyk train haz broken down. Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
   if (faultyStations.length !== 0) {
-    msg = 'uh oh, it lookz lyk train haz broken down.' + parseFaultyStations(faultyStations) + 'Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
+    msg = 'uh oh, it lookz lyk train haz broken down.' + parseFaultyStations(confirmedFaultyStations) + 'Purrrr-lease luk at https://twitter.com/LTAsg 4 moar updates'
   }
   var messageData = {
     recipient: {
