@@ -248,7 +248,7 @@ function checkIfServiceResumed (tweet) {
 
 function checkBreakdownTrend (arr) {
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].count >= 2) {
+    if (arr[i].count == 2) {
       confirmedFaultyStations.push(arr[i])
       anyTrainBreakdown = true
       if (broadcasted === false) {
