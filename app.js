@@ -131,7 +131,7 @@ app.get('/setbreakdown', function (req, res) {
 })
 
 app.get('/breakdownTweets', function (req, res) {
-  res.json({confirmedFaultyStations: confirmedFaultyStations, anyTrainBreakdown: anyTrainBreakdown})
+  res.json({confirmedFaultyStations: confirmedFaultyStations, faultyStations: faultyStations, anyTrainBreakdown: anyTrainBreakdown})
 })
 
 app.get('/dashboard', function (req, res) {
