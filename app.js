@@ -221,7 +221,7 @@ function generateRandomInteger (min, max) {
 
 function checkIfBreakdown (tweet) {
   tweetText = tweet.text.toLowerCase()
-  if (tweetText.match('breakdown|disruption|train fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel|birthday' && tweet.user.id !== 797468706947223552)) {
+  if (tweetText.match('breakdown|disruption|delay|fault|no train service') && !tweetText.match('bangkok|thailand|bkk|busan|djmrt|london|subway|data|singtel|birthday' && tweet.user.id !== 797468706947223552)) {
     breakdownTweetsArray.push(tweetText)
     identifyFaultyStations(tweetText, stationsList)
 
