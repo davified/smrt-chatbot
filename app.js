@@ -118,10 +118,14 @@ app.post('/webhook', function (req, res) {
   }
 })
 
+// function hourlyReset 
+
 app.get('/luituckyew', function (req, res) {
   faultyStations = []
   confirmedFaultyStations = [{}]
   anyTrainBreakdown = false
+  breakdownTweetsArray = []
+  resumeTweetsArray = []
   res.json({confirmedFaultyStations: confirmedFaultyStations, faultyStations: faultyStations, anyTrainBreakdown: anyTrainBreakdown})
 })
 
